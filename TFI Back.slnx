@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Appliction/Application.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Infraestructure/Infraestructure.csproj" />
+  <Project Path="TFI Back/Presentation.csproj" />
+</Solution>

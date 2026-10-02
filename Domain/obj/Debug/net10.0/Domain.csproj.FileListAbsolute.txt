@@ -1,0 +1,4 @@
+C:\Users\Usuario\Documents\Programacion\Carrera\TFI Back\Domain\obj\Debug\net10.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Usuario\Documents\Programacion\Carrera\TFI Back\Domain\obj\Debug\net10.0\Domain.AssemblyInfoInputs.cache
+C:\Users\Usuario\Documents\Programacion\Carrera\TFI Back\Domain\obj\Debug\net10.0\Domain.AssemblyInfo.cs
+C:\Users\Usuario\Documents\Programacion\Carrera\TFI Back\Domain\obj\Debug\net10.0\Domain.csproj.CoreCompileInputs.cache
