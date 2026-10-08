@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class ClinicalRecord
+    public class ClinicalRecord
     {
         public int Id { get; set; }
         public int VeterinaryId { get; set; }
@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string RecordType { get; set; } = string.Empty;
         public string Observation { get; set; } = string.Empty;
         public string Treatment { get; set; } = string.Empty;
-        public string RegisterDate { get; set; } = string.Empty;
+        public DateTime RegisterDate { get; set; }
         public string Diagnostic { get; set; } = string.Empty;
     }
 }

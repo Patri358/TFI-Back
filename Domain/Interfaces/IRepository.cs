@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Domain.Interfaces
 {
-    internal interface IRepository
+    public interface IRepository<T>where T:class
     {
+        Task<T?> GetByIdAsync(int Id);
+        Task<List<T>> GetAllAsync();
+        Task AddAsync(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }

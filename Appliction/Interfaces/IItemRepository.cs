@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    internal interface IItemRepository
+    public interface IItemRepository : IRepository<Item>
     {
+        Task<IEnumerable<Item>> GetAvailableItemsAsync();
     }
 }

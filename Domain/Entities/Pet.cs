@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class Pet
+    public class Pet
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
@@ -12,6 +12,6 @@ namespace Domain.Entities
         public string Race { get; set; } = string.Empty;
         public bool Gender { get; set; }
         public string Species { get; set; } = string.Empty;
-        public string BirthDate { get; set; } = string.Empty;
+        public DateTime BirthDate { get; set; }
     }
 }

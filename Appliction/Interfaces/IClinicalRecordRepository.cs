@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    internal interface IClinicalRecordRepository
+    public interface IClinicalRecordRepository : IRepository<ClinicalRecord>
     {
+        Task<IEnumerable<ClinicalRecord>> GetByPetIdAsync(int petId);
+        Task<IEnumerable<ClinicalRecord>> GetByVeterinaryIdAsync(int veterinaryId);
     }
 }

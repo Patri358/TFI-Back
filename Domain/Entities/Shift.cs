@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class Shift
+    public class Shift
     {
         public int Id { get; set; }
         public int PetId { get; set; }
@@ -13,7 +13,7 @@ namespace Domain.Entities
         public int ServiceId { get; set; }
         public string Status { get; set; } = string.Empty;
         public string ClientObs { get; set; } = string.Empty;
-        public string InitialDate { get; set; } = string.Empty;
-        public string FinalDate { get; set; } = string.Empty;
+        public DateTime InitialDate { get; set; }
+        public string DateTime { get; set; }
     }
 }

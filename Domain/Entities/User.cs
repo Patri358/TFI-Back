@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class User
+    public class User
     {
         public int Id { get; set; }
         public string Dni { get; set; } = string.Empty;
@@ -13,6 +13,6 @@ namespace Domain.Entities
         public string Hash { get; set; } = string.Empty;
         public string Telefone { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
-        public string BirthDate { get; set; } = string.Empty;
+        public DateTime BirthDate { get; set; }
     }
 }

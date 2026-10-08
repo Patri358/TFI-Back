@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class Rating
+    public class Rating
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
         public int ShiftId { get; set; }
-        public string Date { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
         public string Description { get; set; } = string.Empty;
         public int score { get; set; }
     }

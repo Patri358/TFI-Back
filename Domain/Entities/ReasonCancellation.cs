@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class ReasonCancellation
+    public class ReasonCancellation
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
