@@ -14,6 +14,6 @@ namespace Domain.Entities
         public string Status { get; set; } = string.Empty;
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
-        public string DateTime { get; set; }
+        public DateTime FinDate { get; set; }
     }
 }

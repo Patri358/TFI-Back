@@ -4,7 +4,7 @@ using System.Text;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infraestructure.Persistences
+namespace Infrastructure.Persistence
 {
     public class ApplicationDbContext : DbContext
     {

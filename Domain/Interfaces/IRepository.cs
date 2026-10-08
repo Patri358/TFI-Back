@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Domain.Interfaces
 {
-    public interface IRepository<T>where T:class
+    public interface IRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(int Id);
+        Task<T?> GetByIdAsync(int id);
         Task<List<T>> GetAllAsync();
         Task AddAsync(T entity);
         void Update(T entity);
