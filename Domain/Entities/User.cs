@@ -13,6 +13,6 @@ namespace Domain.Entities
         public string Hash { get; set; } = string.Empty;
         public string Telefone { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
     }
 }
