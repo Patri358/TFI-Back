@@ -35,6 +35,20 @@ namespace Infrastructure.Repositories
         public User Add(User user)
         {
             _context.Users.Add(user);
+            return user;
+        }
+
+        public User Update(User user)
+        {
+            var index = _context.Users.FindIndex(u => u.Id == user.Id);
+
+            if (index == -1)
+            {
+                return user;
+            }
+
+            _context.Users[index] = user;
+            return user;
         }
 
         public User? Delete(int id)

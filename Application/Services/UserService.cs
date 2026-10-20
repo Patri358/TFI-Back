@@ -29,7 +29,7 @@ namespace Application.Services
             }).ToList();
         }
 
-        public UserDTO GetById(int id)
+        public UserDTO? GetById(int id)
         {
             var user = _userRepository.GetById(id);
             if (user == null) return null;
@@ -46,7 +46,7 @@ namespace Application.Services
             };
         }
 
-        public UserDTO GetByName(string name)
+        public UserDTO? GetByName(string name)
         {
             var user = _userRepository.GetByName(name);
             if (user == null) return null;
@@ -63,7 +63,7 @@ namespace Application.Services
             };
         }
         
-        public UserDTO Add(CreateUserDTO user)
+        public UserDTO? Add(CreateUserDTO user)
         {
             var newUser = new UserDTO
             {
@@ -79,7 +79,32 @@ namespace Application.Services
             return newUser;
         }
 
-        public UserDTO Delete(int id)
+        public UserDTO? Update(UserDTO user)
+        {
+            var updateUser = _userRepository.GetById(user.Id);
+            if (updateUser == null) return null;
+
+            updateUser.Id = user.Id;
+            updateUser.Dni = user.Dni;
+            updateUser.Name = user.Name;
+            updateUser.Email = user.Email;
+            updateUser.Telephone = user.Telephone;
+            updateUser.State = user.State;
+            updateUser.BirthDate = user.BirthDate;
+
+            return new UserDTO
+            {
+                Id= updateUser.Id,
+                Dni= updateUser.Dni,
+                Name = updateUser.Name,
+                Email = updateUser.Email,
+                Telephone = updateUser.Telephone,
+                State= updateUser.State,
+                BirthDate= updateUser.BirthDate
+            };
+        }
+
+        public UserDTO? Delete(int id)
         {
             var user = _userRepository.GetById(id);
             if (user == null) return null;

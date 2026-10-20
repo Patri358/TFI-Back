@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    // La ruta pública esperada es plural: /api/users/{id}.
+    // [controller] produciría /api/User/{id} porque el nombre de la clase
+    // es UserController.
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -31,10 +34,7 @@ namespace Presentation.Controllers
         {
             var user = _userService.GetById(id);
 
-            if(user == null)
-            {
-                return NotFound("Usuario no encontrado");
-            }
+            if(user == null) return NotFound("Usuario no encontrado");
 
             return Ok(user);
         }
@@ -45,27 +45,42 @@ namespace Presentation.Controllers
         {
             var user = _userService.GetByName(name);
 
-            if(user == null)
-            {
-                return NotFound("Usuario no encontrado");
-            }
+            if(user == null) return NotFound("Usuario no encontrado");
 
             return Ok(user);
         }
 
         // Crear usuario
         [HttpPost]
-        public ActionResult<CreateUserDTO> Post([FromBody] CreateUserDTO user)
+        public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
-            if(user == null)
-            {
-                return BadRequest("El usuario no puede estar vacio");
-            }
-            return Created();
+            var usuarioCreado = _userService.Add(user);
+
+            if (usuarioCreado == null) return NotFound();
+            
+            return CreatedAtAction(
+                nameof(GetById),
+                new {id = usuarioCreado.Id},
+                usuarioCreado
+                );
         }
 
+        // Actualizar
+        [HttpPut("{id}")]
+        public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
+        {
+            if (user == null) return BadRequest("El usuario no puede estar vacío");
 
-        // Eliminar por id
+            user.Id = id;
+
+            var usuarioActualizado = _userService.Update(user);
+
+            if (usuarioActualizado == null) return NotFound(); 
+
+            return Ok(usuarioActualizado);
+        }
+
+        // Eliminar
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {

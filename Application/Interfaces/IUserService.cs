@@ -10,7 +10,8 @@ namespace Application.Interfaces
         List<UserDTO> GetAll();
         UserDTO GetById(int id);
         UserDTO GetByName(string name);
-        UserDTO Add(CreateUserDTO user);
-        UserDTO Delete(int id);
+        UserDTO? Add(CreateUserDTO user);
+        UserDTO? Update(UserDTO user);
+        UserDTO? Delete(int id);
     }
 }
