@@ -32,6 +32,21 @@ namespace Infrastructure.Repositories
             return _context.Users.FirstOrDefault(u => u.Name == name);
         }
 
+        public User Add(User user)
+        {
+            _context.Users.Add(user);
+        }
+
+        public User? Delete(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+            }
+            return user;
+        }
+
         //public async Task<List<User>> GetAllAsync()
         //{
         //    return await _context.User.ToListAsync();

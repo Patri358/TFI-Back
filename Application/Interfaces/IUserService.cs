@@ -8,9 +8,9 @@ namespace Application.Interfaces
     public interface IUserService
     {
         List<UserDTO> GetAll();
-
         UserDTO GetById(int id);
-
         UserDTO GetByName(string name);
+        UserDTO Add(CreateUserDTO user);
+        UserDTO Delete(int id);
     }
 }

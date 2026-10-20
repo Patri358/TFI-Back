@@ -9,10 +9,8 @@ namespace Domain.Interfaces
     {
         List<T> GetAll();
         T? GetById(int id);
-        // Task <List<T>> GetAll();
-        // Task <T?> GetById(int id)
-        //Task AddAsync(T entity);
-        //void Update(T entity);
-        //void Delete(T entity);
+        T Add(T entity);
+        //T Update(T entity);
+        T? Delete(int id);
     }
 }
