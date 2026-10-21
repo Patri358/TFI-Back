@@ -7,10 +7,10 @@ namespace Domain.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(int id);
-        Task<List<T>> GetAllAsync();
-        Task AddAsync(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        List<T> GetAll();
+        T? GetById(int id);
+        T Add(T entity);
+        T Update(T entity);
+        T? Delete(int id);
     }
 }

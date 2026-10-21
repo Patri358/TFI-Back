@@ -6,8 +6,8 @@ using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IPetRepository : IRepository<Pet>
+    public interface IUserRepository : IRepository<User>
     {
-        Task<IEnumerable<Pet>> GetByClientIdAsync(int clientId);
+        User? GetByName(string Name);
     }
 }

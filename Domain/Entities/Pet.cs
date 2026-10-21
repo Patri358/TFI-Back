@@ -12,6 +12,6 @@ namespace Domain.Entities
         public string Race { get; set; } = string.Empty;
         public bool Gender { get; set; }
         public string Species { get; set; } = string.Empty;
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
     }
 }
