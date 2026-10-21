@@ -11,6 +11,5 @@ namespace Domain.Entities
         public int RecepcionistId { get; set; }
         public string State { get; set; } = string.Empty;
         public DateTime CreationDate { get; set; }
-
     }
 }
