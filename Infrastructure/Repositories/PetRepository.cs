@@ -18,11 +18,32 @@ namespace Infrastructure.Repositories
 
         public List <Pet> GetAll()
         {
-
+            throw new NotImplementedException();
         }
 
+        public Pet GetByClientId(int clientId)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Pet GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Pet Add(Pet pet)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Pet Update(Pet pet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Pet? Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
