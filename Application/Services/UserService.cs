@@ -23,7 +23,7 @@ namespace Application.Services
                 Dni = u.Dni,
                 Name = u.Name,
                 Email = u.Email,
-                Telephone = u.Telephone,
+                Telefone = u.Telefone,
                 State = u.State,
                 BirthDate = u.BirthDate
             }).ToList();
@@ -40,7 +40,7 @@ namespace Application.Services
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telephone = user.Telephone,
+                Telefone = user.Telefone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -57,7 +57,7 @@ namespace Application.Services
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telephone = user.Telephone,
+                Telefone = user.Telefone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -71,7 +71,7 @@ namespace Application.Services
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telephone = user.Telephone,
+                Telefone = user.Telefone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -88,7 +88,7 @@ namespace Application.Services
             updateUser.Dni = user.Dni;
             updateUser.Name = user.Name;
             updateUser.Email = user.Email;
-            updateUser.Telephone = user.Telephone;
+            updateUser.Telefone = user.Telefone;
             updateUser.State = user.State;
             updateUser.BirthDate = user.BirthDate;
 
@@ -98,7 +98,7 @@ namespace Application.Services
                 Dni= updateUser.Dni,
                 Name = updateUser.Name,
                 Email = updateUser.Email,
-                Telephone = updateUser.Telephone,
+                Telefone = updateUser.Telefone,
                 State= updateUser.State,
                 BirthDate= updateUser.BirthDate
             };
@@ -115,7 +115,7 @@ namespace Application.Services
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telephone = user.Telephone,
+                Telefone = user.Telefone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };

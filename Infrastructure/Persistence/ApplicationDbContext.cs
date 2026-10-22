@@ -28,8 +28,8 @@ public List<User> Users
             Name = "Patricio",
             Dni = "416546",
             Email = "jfdslk@fewf",
-            Hash = "fhfkwef",
-            Telephone = "fwejkf",
+            PasswordHash = "fhfkwef",
+            Telefone = "fwejkf",
             State = "fnjofjkw",
             BirthDate = new DateOnly(1995, 5, 12)
         },
@@ -38,8 +38,8 @@ public List<User> Users
             Name = "María",
             Dni = "789123",
             Email = "maria@example.com",
-            Hash = "abc123xyz",
-            Telephone = "3415551234",
+            PasswordHash = "abc123xyz",
+            Telefone = "3415551234",
             State = "Activo",
             BirthDate = new DateOnly(1998, 8, 22)
         },
@@ -48,8 +48,8 @@ public List<User> Users
             Name = "Carlos",
             Dni = "456789",
             Email = "carlos@example.com",
-            Hash = "hashsecure789",
-            Telephone = "3415555678",
+            PasswordHash = "hashsecure789",
+            Telefone = "3415555678",
             State = "Activo",
             BirthDate = new DateOnly(1990, 11, 3)
         }

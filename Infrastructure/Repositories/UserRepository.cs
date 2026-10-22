@@ -4,7 +4,10 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+
 using Application.Interfaces;
 
 namespace Infrastructure.Repositories
@@ -32,11 +35,35 @@ namespace Infrastructure.Repositories
             return _context.Users.FirstOrDefault(u => u.Name == name);
         }
 
+        public User? GetByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            return await Task.FromResult(user);
+        }
+
+
         public User Add(User user)
         {
             _context.Users.Add(user);
             return user;
         }
+
+        public async Task AddAsync(User user)
+        {
+            _context.Users.Add(user);
+            await Task.CompletedTask;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await Task.CompletedTask;
+        }
+
 
         public User Update(User user)
         {
