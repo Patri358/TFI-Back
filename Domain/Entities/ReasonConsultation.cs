@@ -11,5 +11,3 @@ namespace Domain.Entities
         public string Description { get; set; } = string.Empty;
     }
 }
-
-//hacer un enum para ReasonConsultation

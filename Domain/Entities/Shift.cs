@@ -11,9 +11,17 @@ namespace Domain.Entities
         public int VeterinaryId { get; set; }
         public int ClientId { get; set; }
         public int ServiceId { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public Status State { get; set; }
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
-        public DateTime FinDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+
+    public enum Status
+    {
+        Pendiente,
+        Activo,
+        Completado,
+        Cancelado
     }
 }
