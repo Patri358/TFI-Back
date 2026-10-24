@@ -20,10 +20,11 @@ namespace Application.Services
             return users.Select(u => new UserDTO
             {
                 Id = u.Id,
+                Rol = u.Rol,
                 Dni = u.Dni,
                 Name = u.Name,
                 Email = u.Email,
-                Telefone = u.Telefone,
+                Telephone = u.Telephone,
                 State = u.State,
                 BirthDate = u.BirthDate
             }).ToList();
@@ -37,10 +38,11 @@ namespace Application.Services
             return new UserDTO
             {
                 Id = user.Id,
+                Rol = user.Rol,
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telefone = user.Telefone,
+                Telephone = user.Telephone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -54,10 +56,11 @@ namespace Application.Services
             return new UserDTO
             {
                 Id = user.Id,
+                Rol = user.Rol,
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telefone = user.Telefone,
+                Telephone = user.Telephone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -68,10 +71,11 @@ namespace Application.Services
             var newUser = new UserDTO
             {
                 Id = 4,
+                Rol = user.Rol,
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telefone = user.Telefone,
+                Telephone = user.Telephone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
@@ -85,20 +89,22 @@ namespace Application.Services
             if (updateUser == null) return null;
 
             updateUser.Id = user.Id;
+            updateUser.Rol = user.Rol;
             updateUser.Dni = user.Dni;
             updateUser.Name = user.Name;
             updateUser.Email = user.Email;
-            updateUser.Telefone = user.Telefone;
+            updateUser.Telephone = user.Telephone;
             updateUser.State = user.State;
             updateUser.BirthDate = user.BirthDate;
 
             return new UserDTO
             {
                 Id= updateUser.Id,
+                Rol = updateUser.Rol,
                 Dni= updateUser.Dni,
                 Name = updateUser.Name,
                 Email = updateUser.Email,
-                Telefone = updateUser.Telefone,
+                Telephone = updateUser.Telephone,
                 State= updateUser.State,
                 BirthDate= updateUser.BirthDate
             };
@@ -112,10 +118,11 @@ namespace Application.Services
             return new UserDTO
             {
                 Id = user.Id,
+                Rol = user.Rol,
                 Dni = user.Dni,
                 Name = user.Name,
                 Email = user.Email,
-                Telefone = user.Telefone,
+                Telephone = user.Telephone,
                 State = user.State,
                 BirthDate = user.BirthDate
             };
