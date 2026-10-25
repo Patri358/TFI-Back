@@ -257,5 +257,28 @@ namespace Infrastructure.Persistence
             }
             ];
 
+        // reseñas
+        public List<Rating> Ratings
+        {
+            get;
+        } = [
+            new Rating{
+             Id = 1,
+             ClientId = 1,
+             ShiftId = 1,
+             Date = DateTime.Now,
+             Description = "descripcion 1",
+             Score = 5
+            },
+            new Rating{
+             Id = 2,
+             ClientId = 2,
+             ShiftId = 2,
+             Date = DateTime.Now,
+             Description = "descripcion 2",
+             Score = 4
+            }
+            ];
+
     }
 }

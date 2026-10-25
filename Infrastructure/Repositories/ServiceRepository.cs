@@ -52,6 +52,5 @@ namespace Infrastructure.Repositories
             _context.Services.Remove(service);
             return service;
         }
-
     }
 }
