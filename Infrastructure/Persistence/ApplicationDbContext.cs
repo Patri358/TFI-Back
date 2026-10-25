@@ -108,5 +108,30 @@ namespace Infrastructure.Persistence
                 Total = 1000
             }
         ];
+
+        // items
+        public List<Item> Items
+        {
+            get;
+        } = [
+            new Item{
+                Id = 1,
+                Name = "Comida para gatos",
+                Price = 50,
+                Stock = 0,
+                Available = false,
+                Description = "Comida para gatos" 
+            },
+            new Item{
+                Id = 2,
+                Name = "Comida para perros",
+                Price = 100,
+                Stock = 25,
+                Available = true,
+                Description = "Comida para perros"
+            }
+            ];
+
+
     }
 }
