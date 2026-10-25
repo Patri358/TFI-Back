@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,13 +12,13 @@ namespace Domain.Entities
         public int VeterinaryId { get; set; }
         public int ClientId { get; set; }
         public int ServiceId { get; set; }
-        public Status State { get; set; }
+        public ShiftStatus Status { get; set; }
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
         public DateTime EndDate { get; set; }
     }
 
-    public enum Status
+    public enum ShiftStatus
     {
         Pendiente,
         Activo,

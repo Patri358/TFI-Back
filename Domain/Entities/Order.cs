@@ -14,6 +14,9 @@ namespace Domain.Entities
         public string PaymentMethod { get; set; } = string.Empty;
         public OrderStatus Status { get; set; } = OrderStatus.PendientePago;
         public decimal Total { get; set; }
+
+        // 1:n
+        public List<OrderItem> Items { get; set; } = [];
     }
     public enum OrderStatus
     {

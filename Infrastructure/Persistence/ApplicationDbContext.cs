@@ -95,7 +95,8 @@ namespace Infrastructure.Persistence
                 PreparationDate = null,
                 PaymentMethod = "Efectivo",
                 Status = OrderStatus.PendientePago,
-                Total = 0
+                Total = 0,
+                Items = []
             },
             new Order{
                 Id = 2,
@@ -105,7 +106,8 @@ namespace Infrastructure.Persistence
                 PreparationDate= null,
                 PaymentMethod = "Crédito",
                 Status = OrderStatus.Pagado,
-                Total = 1000
+                Total = 1000,
+                Items = []
             }
         ];
 
@@ -132,6 +134,33 @@ namespace Infrastructure.Persistence
             }
             ];
 
-
+        // turnos
+        public List<Shift> Shifts
+        {
+            get;
+        } = [
+            new Shift{
+                Id = 1,
+                PetId = 1,
+                VeterinaryId = 1,
+                ClientId = 1,
+                ServiceId = 1,
+                Status = ShiftStatus.Completado,
+                ClientObs = "Sin observaciones",
+                InitialDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            },
+            new Shift{
+                Id = 2,
+                PetId = 2,
+                VeterinaryId = 2,
+                ClientId = 2,
+                ServiceId = 2,
+                Status = ShiftStatus.Activo,
+                ClientObs = "Sin observaciones",
+                InitialDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            }
+            ];
     }
 }

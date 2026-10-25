@@ -11,6 +11,6 @@ namespace Domain.Entities
         public int ShiftId { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; } = string.Empty;
-        public int score { get; set; }
+        public int Score { get; set; }
     }
 }
