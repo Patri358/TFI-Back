@@ -8,9 +8,11 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
-        public int RecepcionistId { get; set; }
+        public int ReceptionistId { get; set; }
         public ChatStatus Status { get; set; }
         public DateTime CreationDate { get; set; }
+
+        public List<Message> Messages { get; set; } = [];
     }
 
     public enum ChatStatus

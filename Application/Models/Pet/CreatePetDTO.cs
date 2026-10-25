@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Models
+namespace Application.Models.Pet
 {
     public class CreatePetDTO
     {

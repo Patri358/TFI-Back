@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using Application.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Text;

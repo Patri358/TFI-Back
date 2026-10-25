@@ -163,12 +163,12 @@ namespace Infrastructure.Persistence
             }
             ];
 
-        // sesiones
-        public List<Sesion> Sessions
+        // Sessiones
+        public List<Session> Sessions
         {
             get;
         } = [
-            new Sesion{
+            new Session{
                  Id = 1,
                  UserId = 1,
                  Token = "token1",
@@ -176,7 +176,7 @@ namespace Infrastructure.Persistence
                  RevocationDate = DateTime.Now,
                  ExpirationDate = DateTime.Now
             },
-            new Sesion{
+            new Session{
                  Id = 2,
                  UserId = 2,
                  Token = "token2",

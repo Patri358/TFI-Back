@@ -9,7 +9,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int ClientId { get; set; }
         public int ShiftId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         public string Description { get; set; } = string.Empty;
         public int Score { get; set; }
     }

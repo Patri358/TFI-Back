@@ -8,20 +8,20 @@ using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {
-    public class SesionRepository : ISesionRepository
+    public class SessionRepository : ISessionRepository
     {
         private readonly ApplicationDbContext _context;
-        public SesionRepository(ApplicationDbContext context)
+        public SessionRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public List<Sesion> GetAll()
+        public List<Session> GetAll()
         {
             return _context.Sessions;
         }
 
-        public Sesion? GetById(int id)
+        public Session? GetById(int id)
         {
             var session = _context.Sessions.FirstOrDefault(s => s.Id == id);
             if (session == null) return null;
@@ -29,28 +29,28 @@ namespace Infrastructure.Repositories
             return session;
         }
 
-        public Sesion Add(Sesion sesion)
+        public Session Add(Session Session)
         {
-            _context.Sessions.Add(sesion);
-            return sesion;
+            _context.Sessions.Add(Session);
+            return Session;
         }
 
-        public Sesion Update(Sesion sesion)
+        public Session Update(Session Session)
         {
-            var index = _context.Sessions.FindIndex(s => s.Id == sesion.Id);
-            if (index == -1) return sesion;
+            var index = _context.Sessions.FindIndex(s => s.Id == Session.Id);
+            if (index == -1) return Session;
 
-            _context.Sessions[index] = sesion;
-            return sesion;
+            _context.Sessions[index] = Session;
+            return Session;
         }
 
-        public Sesion? Delete(int id)
+        public Session? Delete(int id)
         {
-            var sesion = GetById(id);
-            if (sesion == null) return null;
+            var Session = GetById(id);
+            if (Session == null) return null;
 
-            _context.Sessions.Remove(sesion);
-            return sesion;
+            _context.Sessions.Remove(Session);
+            return Session;
         }
 
     }

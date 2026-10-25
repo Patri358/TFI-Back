@@ -12,7 +12,7 @@ namespace Domain.Entities
         public int VeterinaryId { get; set; }
         public int ClientId { get; set; }
         public int ServiceId { get; set; }
-        public ShiftStatus Status { get; set; }
+        public ShiftStatus Status { get; set; } = ShiftStatus.Pendiente;
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
         public DateTime EndDate { get; set; }

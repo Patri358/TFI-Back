@@ -6,9 +6,9 @@ using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface ISesionRepository : IRepository<Sesion>
+    public interface ISessionRepository : IRepository<Session>
     {
-        //Task<Sesion?> GetByTokenAsync(string token);
-        //Task<IEnumerable<Sesion>> GetActiveSessionsByUserIdAsync(int userId);
+        //Task<Session?> GetByTokenAsync(string token);
+        //Task<IEnumerable<Session>> GetActiveSessionsByUserIdAsync(int userId);
     }
 }

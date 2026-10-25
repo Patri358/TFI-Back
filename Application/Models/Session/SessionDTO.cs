@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Entities
+namespace Application.Models.Session
 {
-    public class Sesion
+    public class SessionDTO
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -4,6 +4,7 @@ using Application.Interfaces;
 using System.Runtime.InteropServices.Marshalling;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Application.Models.User;
 
 namespace Presentation.Controllers
 {
