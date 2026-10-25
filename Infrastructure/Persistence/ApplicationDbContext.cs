@@ -236,5 +236,26 @@ namespace Infrastructure.Persistence
             }
             ];
 
+        // servicios
+        public List<Service> Services
+        {
+            get;
+        } = [
+            new Service{
+                 Id = 1,
+                 Title = "servicio 1",
+                 Description = "descripción 1",
+                 Price = 50,
+                 Duration = 15
+            },
+            new Service{
+                 Id = 2,
+                 Title = "servicio 2",
+                 Description = "descripción 2",
+                 Price = 100,
+                 Duration = 30,
+            }
+            ];
+
     }
 }

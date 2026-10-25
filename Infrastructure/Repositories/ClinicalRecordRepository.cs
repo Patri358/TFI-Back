@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
             return clinicalRecord;
         }
 
-        public ClinicalRecord Delete(int id)
+        public ClinicalRecord? Delete(int id)
         {
             var clinicalRecord = GetById(id);
             if (clinicalRecord == null) return null;
