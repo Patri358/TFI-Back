@@ -1,12 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
     public class ApplicationDbContext
     {
-        public List<User> Users { get; } = [
+        // usuarios
+        public List<User> Users
+        {
+            get;
+        } = [
             new User {
                 Id = 1,
                 Rol = Role.Admin,
@@ -42,7 +48,11 @@ namespace Infrastructure.Persistence
             }
         ];
 
-        public List<Pet> Pets { get; } = [
+        // mascotas
+        public List<Pet> Pets
+        {
+            get;
+        } = [
             new Pet {
                 Id = 1,
                 ClientId = 1,
@@ -72,27 +82,20 @@ namespace Infrastructure.Persistence
             }
         ];
 
-        public List<Order> Orders { get; } = [
+        public List<Order> Orders
+        {
+            get;
+        } = [
             new Order {
                 Id = 1,
                 CustomerId = 1,
                 OrderDate = DateTime.Now,
+                DeliveryDate = null,
+                PreparationDate = null,
                 PaymentMethod = "Efectivo",
                 Status = OrderStatus.Pendiente,
-                TotalAmount = 1500.0m
+                TotalAmount = 0
             }
         ];
     }
 }
-
-        //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        //    : base(options)
-        //{
-        //}
-
-        //public DbSet<User> User { get; set; }
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //}
