@@ -205,6 +205,36 @@ namespace Infrastructure.Persistence
                  Status = ChatStatus.Finalizado,
                  CreationDate = DateTime.Now
             }
-            ];   
+            ];
+
+        // registros clinicos
+        public List<ClinicalRecord> ClinicalRecords
+        {
+            get;
+        } = [
+            new ClinicalRecord{
+                 Id = 1,
+                 VeterinaryId = 1,
+                 PetId = 1,
+                 ShiftId = 1,
+                 RecordType = "registro",
+                 Observation = "observación",
+                 Treatment = "tratamiento",
+                 RegisterDate = DateTime.Now,
+                 Diagnostic = "sin diagnóstico"
+            },
+            new ClinicalRecord{
+                 Id = 2,
+                 VeterinaryId = 2,
+                 PetId = 2,
+                 ShiftId = 2,
+                 RecordType = "registro completo",
+                 Observation = "sin observación",
+                 Treatment = "tratamiento",
+                 RegisterDate = DateTime.Now,
+                 Diagnostic = "diagnóstico realizado"
+            }
+            ];
+
     }
 }
