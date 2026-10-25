@@ -185,5 +185,26 @@ namespace Infrastructure.Persistence
                  ExpirationDate = DateTime.Now
             }
             ];
+
+        // chats
+        public List<Chat> Chats
+        {
+            get;
+        } = [
+            new Chat{
+                 Id = 1,
+                 ClientId = 1,
+                 RecepcionistId = 3,
+                 Status = ChatStatus.Activo,
+                 CreationDate = DateTime.Now,
+            },
+            new Chat{
+                 Id = 2,
+                 ClientId = 2,
+                 RecepcionistId = 4,
+                 Status = ChatStatus.Finalizado,
+                 CreationDate = DateTime.Now
+            }
+            ];   
     }
 }
