@@ -82,19 +82,30 @@ namespace Infrastructure.Persistence
             }
         ];
 
+        // ordenes
         public List<Order> Orders
         {
             get;
         } = [
             new Order {
                 Id = 1,
-                CustomerId = 1,
+                ClientId = 1,
                 OrderDate = DateTime.Now,
                 DeliveryDate = null,
                 PreparationDate = null,
                 PaymentMethod = "Efectivo",
-                Status = OrderStatus.Pendiente,
-                TotalAmount = 0
+                Status = OrderStatus.PendientePago,
+                Total = 0
+            },
+            new Order{
+                Id = 2,
+                ClientId= 2,
+                OrderDate= DateTime.Now,
+                DeliveryDate= null,
+                PreparationDate= null,
+                PaymentMethod = "Crédito",
+                Status = OrderStatus.Pagado,
+                Total = 1000
             }
         ];
     }
