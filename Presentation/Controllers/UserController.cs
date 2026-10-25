@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace Presentation.Controllers
 {
     [ApiController]
-    // La ruta pública esperada es plural: /api/users/{id}.
-    // [controller] produciría /api/User/{id} porque el nombre de la clase
-    // es UserController.
     [Route("api/users")]
     public class UserController : ControllerBase
     {
