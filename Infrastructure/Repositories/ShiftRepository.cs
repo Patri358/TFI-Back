@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Domain.Interfaces;
-using System.Data.SqlTypes;
+using Application.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    public class ShiftRepository : IRepository<Shift>
+    public class ShiftRepository : IShiftRepository
     {
         private readonly ApplicationDbContext _context;
         public ShiftRepository(ApplicationDbContext context)

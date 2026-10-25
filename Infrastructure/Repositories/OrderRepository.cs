@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Text;
 using Domain.Interfaces;
 using System.Runtime.CompilerServices;
+using Application.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    public class OrderRepository : IRepository<Order>
+    public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDbContext _context;
         public OrderRepository(ApplicationDbContext context)

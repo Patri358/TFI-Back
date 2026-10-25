@@ -8,9 +8,9 @@ namespace Application.Interfaces
 {
     public interface IShiftRepository : IRepository<Shift>
     {
-        Task<IEnumerable<Shift>> GetByClientIdAsync(int clientId);
-        Task<IEnumerable<Shift>> GetByVeterinaryIdAsync(int veterinaryId);
-        Task<IEnumerable<Shift>> GetByPetIdAsync(int petId);
-        Task<IEnumerable<Shift>> GetByStatusAsync(string status);
+        // Task<IEnumerable<Shift>> GetByClientIdAsync(int clientId);
+        // Task<IEnumerable<Shift>> GetByVeterinaryIdAsync(int veterinaryId);
+        // Task<IEnumerable<Shift>> GetByPetIdAsync(int petId);
+        // Task<IEnumerable<Shift>> GetByStatusAsync(string status);
     }
 }

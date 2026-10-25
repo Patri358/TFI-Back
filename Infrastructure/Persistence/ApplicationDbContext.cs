@@ -162,5 +162,28 @@ namespace Infrastructure.Persistence
                 EndDate = DateTime.Now,
             }
             ];
+
+        // sesiones
+        public List<Sesion> Sessions
+        {
+            get;
+        } = [
+            new Sesion{
+                 Id = 1,
+                 UserId = 1,
+                 Token = "token1",
+                 EmissionDate = DateTime.Now,
+                 RevocationDate = DateTime.Now,
+                 ExpirationDate = DateTime.Now
+            },
+            new Sesion{
+                 Id = 2,
+                 UserId = 2,
+                 Token = "token2",
+                 EmissionDate = DateTime.Now,
+                 RevocationDate = DateTime.Now,
+                 ExpirationDate = DateTime.Now
+            }
+            ];
     }
 }

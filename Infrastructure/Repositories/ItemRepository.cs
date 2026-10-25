@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Domain.Interfaces;
+using Application.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    public class ItemRepository : IRepository<Item>
+    public class ItemRepository : IItemRepository
     {
         private readonly ApplicationDbContext _context;
         public ItemRepository(ApplicationDbContext context)
