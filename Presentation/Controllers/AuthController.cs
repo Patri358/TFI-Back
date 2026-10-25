@@ -4,7 +4,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
-{       
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
