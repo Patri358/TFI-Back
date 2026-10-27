@@ -1,4 +1,4 @@
-﻿    using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.User;
 using Domain.Entities;
@@ -69,11 +69,12 @@ namespace Application.Services
         
         public UserDTO? Add(CreateUserDTO user)
         {
-            var newUser = new UserDTO
+            if (user == null) return null;
+
+            var newUser = new User
             {
-                Id = 4,
                 Rol = user.Rol,
-                Dni = user.Dni,
+                Dni= user.Dni,
                 Name = user.Name,
                 Email = user.Email,
                 Telephone = user.Telephone,
@@ -81,7 +82,21 @@ namespace Application.Services
                 BirthDate = user.BirthDate
             };
 
-            return newUser;
+            var addedUser = _userRepository.Add(newUser);
+
+            var newUserDTO = new UserDTO
+            {
+                Id = addedUser.Id,
+                Rol = addedUser.Rol,
+                Dni = addedUser.Dni,
+                Name = addedUser.Name,
+                Email = addedUser.Email,
+                Telephone = addedUser.Telephone,
+                State = addedUser.State,
+                BirthDate = addedUser.BirthDate
+            };
+
+            return newUserDTO;
         }
 
         public UserDTO? Update(UserDTO user)
@@ -97,6 +112,8 @@ namespace Application.Services
             updateUser.Telephone = user.Telephone;
             updateUser.State = user.State;
             updateUser.BirthDate = user.BirthDate;
+            
+            _userRepository.Update(updateUser);
 
             return new UserDTO
             {
@@ -115,6 +132,8 @@ namespace Application.Services
         {
             var user = _userRepository.GetById(id);
             if (user == null) return null;
+
+            _userRepository.Delete(id);
 
             return new UserDTO
             {

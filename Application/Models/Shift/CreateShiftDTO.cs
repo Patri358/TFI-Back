@@ -12,6 +12,5 @@ namespace Application.Models.Shift
         public int ServiceId { get; set; }
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
-        public DateTime EndDate { get; set; }
     }
 }

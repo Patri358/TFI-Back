@@ -15,7 +15,7 @@ namespace Domain.Entities
         public ShiftStatus Status { get; set; } = ShiftStatus.Pendiente;
         public string ClientObs { get; set; } = string.Empty;
         public DateTime InitialDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 
     public enum ShiftStatus

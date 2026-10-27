@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Pet;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -69,9 +70,8 @@ namespace Application.Services
 
         public PetDTO Add(CreatePetDTO pet)
         {
-            var newPet = new PetDTO
+            var newPet = new Pet
             {
-                Id = 3,
                 ClientId = pet.ClientId,
                 Name = pet.Name,
                 Race = pet.Race,
@@ -80,7 +80,20 @@ namespace Application.Services
                 BirthDate = pet.BirthDate,
             };
 
-            return newPet;
+            var addedPet = _petRepository.Add(newPet);
+
+            var newPetDTO = new PetDTO
+            {
+                Id = addedPet.Id,
+                ClientId = addedPet.ClientId,
+                Name = addedPet.Name,
+                Race = addedPet.Race,
+                Gender = addedPet.Gender,
+                Species = addedPet.Species,
+                BirthDate = addedPet.BirthDate,
+            };
+
+            return newPetDTO;
         }
 
         public PetDTO? Update(PetDTO pet)
@@ -96,6 +109,8 @@ namespace Application.Services
             updatePet.Gender = pet.Gender;
             updatePet.Species = pet.Species;
             updatePet.BirthDate = pet.BirthDate;
+
+            _petRepository.Update(updatePet);
 
             return new PetDTO
             {
@@ -114,6 +129,8 @@ namespace Application.Services
             var pet = _petRepository.GetById(id);
 
             if(pet == null) return null;
+
+            _petRepository.Delete(id);
 
             return new PetDTO
             {
