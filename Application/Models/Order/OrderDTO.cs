@@ -18,6 +18,6 @@ namespace Application.Models.Order
         public decimal Total { get; set; }
 
         // 1:n
-        public List<OrderItemDTO> Items { get; set; } = [];
+        public List<OrderItemDTO> Items { get; set; } = new List<OrderItemDTO>();
     }
 }

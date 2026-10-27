@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Models.OrderItem;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace Application.Models.Order
         public DateTime? PreparationDate { get; set; } = null;
         public string PaymentMethod { get; set; } = string.Empty;
         public OrderStatus Status { get; set; } = OrderStatus.PendientePago;
+        public List<CreateOrderItemDTO> Items { get; set;} = new List<CreateOrderItemDTO>();
     }
 }

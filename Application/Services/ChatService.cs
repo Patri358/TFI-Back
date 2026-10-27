@@ -75,7 +75,7 @@ namespace Application.Services
 
             var addedChat = _chatRepository.Add(newChat);
 
-            var newChatDTO = new ChatDTO
+            return new ChatDTO
             {
                 Id = addedChat.Id,
                 ClientId = addedChat.ClientId,
@@ -84,8 +84,6 @@ namespace Application.Services
                 CreationDate = addedChat.CreationDate,
                 Messages = new List<MessageDTO>()
             };
-
-            return newChatDTO;
         }
 
         public ChatDTO? Update(ChatDTO chat)
