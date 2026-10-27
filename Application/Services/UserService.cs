@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿    using Application.Interfaces;
 using Application.Models;
 using Application.Models.User;
 using Domain.Entities;
@@ -100,14 +100,14 @@ namespace Application.Services
 
             return new UserDTO
             {
-                Id= updateUser.Id,
+                Id = updateUser.Id,
                 Rol = updateUser.Rol,
                 Dni= updateUser.Dni,
                 Name = updateUser.Name,
                 Email = updateUser.Email,
                 Telephone = updateUser.Telephone,
-                State= updateUser.State,
-                BirthDate= updateUser.BirthDate
+                State = updateUser.State,
+                BirthDate = updateUser.BirthDate
             };
         }
 
