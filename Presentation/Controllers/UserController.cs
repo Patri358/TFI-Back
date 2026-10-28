@@ -65,8 +65,8 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
         {
-            if (user == null) return BadRequest("El usuario no puede tener datos incompletos");
-            if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del objeto");
+            if (user == null) return BadRequest("Los datos del usuario están incompletos");
+            if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del usuario");
 
             var updateUser = _userService.Update(user);
             if (updateUser == null) return NotFound($"El usuario con el Id: {id} no pudo ser actualizado"); 

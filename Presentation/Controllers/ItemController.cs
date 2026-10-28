@@ -47,7 +47,7 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public ActionResult<ItemDTO> Update([FromBody] ItemDTO item, [FromRoute] int id)
         {
-            if (item == null) return BadRequest("El item no puede estar vacío");
+            if (item == null) return BadRequest("Los datos del item están incompletos");
             if (item.Id != id) return BadRequest("El Id de la ruta no coincide con el del item");
 
             var updatedItem = _itemService.Update(item);

@@ -48,11 +48,11 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public ActionResult<ChatDTO> Update([FromBody] ChatDTO chat, [FromRoute] int id)
         {
-            if (chat == null) return BadRequest("El chat no puede estar vacío");
-            if (chat.Id != id) return BadRequest("El Id de la ruta no coincide con el del objeto");
+            if (chat == null) return BadRequest("Los datos del chat están incompletos");
+            if (chat.Id != id) return BadRequest("El Id de la ruta no coincide con el del chat");
 
             var updateChat = _chatService.Update(chat);
-            if (updateChat == null) return NotFound($"El chat con el {id} no existe");
+            if (updateChat == null) return NotFound($"El chat con el Id:{id} no pudo ser actualizado");
 
             return Ok(updateChat);
         }

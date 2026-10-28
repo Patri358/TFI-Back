@@ -46,11 +46,11 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public ActionResult<ClinicalRecordDTO> Update([FromBody] ClinicalRecordDTO clinicalRecord, [FromRoute] int id)
         {
-            if (clinicalRecord == null) return BadRequest("El registro clínico no puede estar vacío, verifique los datos");
+            if (clinicalRecord == null) return BadRequest("Los datos del registro clínico están incompletos");
             if (clinicalRecord.Id != id) return BadRequest("El Id de la ruta no coincide con el del registro clínico");
 
             var updateClinicalRecord = _clinicalRecordService.Update(clinicalRecord);
-            if (updateClinicalRecord == null) return NotFound("El registro clínico no existe");
+            if (updateClinicalRecord == null) return NotFound($"El registro clínico con el Id:{clinicalRecord.Id} no pudo ser actualizado");
 
             return Ok(updateClinicalRecord);
         }

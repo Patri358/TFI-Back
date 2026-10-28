@@ -52,7 +52,7 @@ namespace Presentation.Controllers
             if (pet.Id != id) return BadRequest("El Id de la ruta no coincide con el de la mascota");
 
             var updatePet = _petService.Update(pet);
-            if (updatePet == null) return BadRequest($"La mascota con el Id: {pet.Id} no pudo ser actualizada");
+            if (updatePet == null) return NotFound($"La mascota con el Id: {pet.Id} no pudo ser actualizada");
 
             return Ok(updatePet);
         }
