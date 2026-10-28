@@ -50,7 +50,7 @@ namespace Presentation.Controllers
             if (service.Id != id) return BadRequest("El Id de la ruta no coincide con el del servicio");
 
             var updatedService = _serviceService.Update(service);
-            if (updatedService == null) return BadRequest($"No se pudo actualizar el servicio con Id:{service.Id}");
+            if (updatedService == null) return NotFound($"No se pudo actualizar el servicio con Id:{service.Id}");
 
             return Ok(updatedService);
         }
@@ -59,7 +59,7 @@ namespace Presentation.Controllers
         public ActionResult<ServiceDTO> Delete([FromRoute] int id)
         {
             var service = _serviceService.Delete(id);
-            if (service == null) return BadRequest($"El servicio con Id:{id} no pudo ser eliminado");
+            if (service == null) return NotFound($"El servicio con Id:{id} no pudo ser eliminado");
 
             return Ok(service);
         }
