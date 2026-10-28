@@ -31,7 +31,6 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> GetById([FromRoute] int id)
         {
             var user = _userService.GetById(id);
-
             if(user == null) return NotFound("Usuario no encontrado");
 
             return Ok(user);
@@ -42,7 +41,6 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> GetByName([FromRoute] string name)
         {
             var user = _userService.GetByName(name);
-
             if(user == null) return NotFound("Usuario no encontrado");
 
             return Ok(user);
@@ -53,14 +51,13 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
             var usuarioCreado = _userService.Add(user);
-
-            if (usuarioCreado == null) return NotFound();
+            if (usuarioCreado == null) return NotFound("Usuario no fue creado");
             
             return CreatedAtAction(
                 nameof(GetById),
                 new {id = usuarioCreado.Id},
                 usuarioCreado
-                );
+            );
         }
 
         // Actualizar
@@ -68,14 +65,12 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
         {
             if (user == null) return BadRequest("El usuario no puede estar vacío");
+            if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del objeto");
 
-            user.Id = id;
+            var updateUser = _userService.Update(user);
+            if (updateUser == null) return NotFound(); 
 
-            var usuarioActualizado = _userService.Update(user);
-
-            if (usuarioActualizado == null) return NotFound(); 
-
-            return Ok(usuarioActualizado);
+            return Ok(updateUser);
         }
 
         // Eliminar
@@ -83,10 +78,7 @@ namespace Presentation.Controllers
         public ActionResult Delete([FromRoute] int id)
         {
             var user = _userService.Delete(id);
-            if(user == null)
-            {
-                return NotFound("Usuario no encontrado");
-            }
+            if(user == null) return NotFound("Usuario no encontrado");
 
             return Ok(user);
         }
