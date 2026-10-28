@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Interfaces;
 using Application.Models;
-using Application.Interfaces;
-using System.Runtime.InteropServices.Marshalling;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Application.Models.User;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query;
+using System.Runtime.InteropServices.Marshalling;
+using System.Xml.Linq;
 
 namespace Presentation.Controllers
 {
@@ -31,7 +32,7 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> GetById([FromRoute] int id)
         {
             var user = _userService.GetById(id);
-            if(user == null) return NotFound("Usuario no encontrado");
+            if(user == null) return NotFound($"No se encontró el usuario con el Id: {id}");
 
             return Ok(user);
         }
@@ -41,7 +42,7 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> GetByName([FromRoute] string name)
         {
             var user = _userService.GetByName(name);
-            if(user == null) return NotFound("Usuario no encontrado");
+            if(user == null) return NotFound($"No se encontró el usuario con el nombre: {name}");
 
             return Ok(user);
         }
@@ -51,12 +52,12 @@ namespace Presentation.Controllers
         public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
             var usuarioCreado = _userService.Add(user);
-            if (usuarioCreado == null) return NotFound("Usuario no fue creado");
+            if (usuarioCreado == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
             
             return CreatedAtAction(
-                nameof(GetById),
-                new {id = usuarioCreado.Id},
-                usuarioCreado
+                actionName: nameof(GetById),
+                routeValues: new {id = usuarioCreado.Id},
+                value: usuarioCreado
             );
         }
 
@@ -68,7 +69,7 @@ namespace Presentation.Controllers
             if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del objeto");
 
             var updateUser = _userService.Update(user);
-            if (updateUser == null) return NotFound(); 
+            if (updateUser == null) return NotFound($"El usuario con el Id: {id} no pudo ser actualizado"); 
 
             return Ok(updateUser);
         }
@@ -78,7 +79,7 @@ namespace Presentation.Controllers
         public ActionResult Delete([FromRoute] int id)
         {
             var user = _userService.Delete(id);
-            if(user == null) return NotFound("Usuario no encontrado");
+            if(user == null) return NotFound($"El usuario con el Id: {id} no pudo ser eliminado");
 
             return Ok(user);
         }
