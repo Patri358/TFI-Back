@@ -35,7 +35,7 @@ namespace Presentation.Controllers
         public ActionResult<ChatDTO> Add([FromBody] CreateChatDTO chat)
         {
             var createdChat = _chatService.Add(chat);
-            if (createdChat == null) return BadRequest("No se pudo crear el chat, verifique los datos");
+            if (createdChat == null) return BadRequest("No se pudo crear el chat");
 
             // codigo 201
             return CreatedAtAction(
