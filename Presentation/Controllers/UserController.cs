@@ -51,13 +51,13 @@ namespace Presentation.Controllers
         [HttpPost]
         public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
-            var usuarioCreado = _userService.Add(user);
-            if (usuarioCreado == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
+            var createdUser = _userService.Add(user);
+            if (createdUser == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
             
             return CreatedAtAction(
                 actionName: nameof(GetById),
-                routeValues: new {id = usuarioCreado.Id},
-                value: usuarioCreado
+                routeValues: new {id = createdUser.Id},
+                value: createdUser
             );
         }
 
@@ -65,7 +65,7 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
         {
-            if (user == null) return BadRequest("El usuario no puede estar vacío");
+            if (user == null) return BadRequest("El usuario no puede tener datos incompletos");
             if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del objeto");
 
             var updateUser = _userService.Update(user);
