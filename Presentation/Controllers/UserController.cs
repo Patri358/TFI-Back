@@ -10,28 +10,28 @@ using System.Xml.Linq;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/Users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IUserservice _Userservice;
+        public UserController(IUserservice Userservice)
         {
-            _userService = userService;
+            _Userservice = Userservice;
         }
 
         // Buscar todos
         [HttpGet]
         public ActionResult<List<UserDTO>> Get()
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            var Users = _Userservice.GetAll();
+            return Ok(Users);
         }
 
         // Buscar por id
         [HttpGet("{id}")]
         public ActionResult<UserDTO> GetById([FromRoute] int id)
         {
-            var user = _userService.GetById(id);
+            var user = _Userservice.GetById(id);
             if(user == null) return NotFound($"No se encontró el usuario con el Id: {id}");
 
             return Ok(user);
@@ -41,7 +41,7 @@ namespace Presentation.Controllers
         [HttpGet("nombre/{name}")]
         public ActionResult<UserDTO> GetByName([FromRoute] string name)
         {
-            var user = _userService.GetByName(name);
+            var user = _Userservice.GetByName(name);
             if(user == null) return NotFound($"No se encontró el usuario con el nombre: {name}");
 
             return Ok(user);
@@ -51,7 +51,7 @@ namespace Presentation.Controllers
         [HttpPost]
         public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
-            var createdUser = _userService.Add(user);
+            var createdUser = _Userservice.Add(user);
             if (createdUser == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
             
             return CreatedAtAction(
@@ -68,7 +68,7 @@ namespace Presentation.Controllers
             if (user == null) return BadRequest("Los datos del usuario están incompletos");
             if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del usuario");
 
-            var updateUser = _userService.Update(user);
+            var updateUser = _Userservice.Update(user);
             if (updateUser == null) return NotFound($"El usuario con el Id: {id} no pudo ser actualizado"); 
 
             return Ok(updateUser);
@@ -78,7 +78,7 @@ namespace Presentation.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            var user = _userService.Delete(id);
+            var user = _Userservice.Delete(id);
             if(user == null) return NotFound($"El usuario con el Id: {id} no pudo ser eliminado");
 
             return Ok(user);

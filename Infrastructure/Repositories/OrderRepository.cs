@@ -6,6 +6,7 @@ using System.Text;
 using Domain.Interfaces;
 using System.Runtime.CompilerServices;
 using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -19,12 +20,17 @@ namespace Infrastructure.Repositories
 
         public List<Order> GetAll()
         {
-            return _context.Orders;
+            return _context.Orders
+                .Include(o => o.Items)
+                .ToList();
         }
 
         public Order? GetById(int id)
         {
-            var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+            var order = _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefault(o => o.Id == id);
+
             return order;
         }
 
@@ -36,11 +42,7 @@ namespace Infrastructure.Repositories
 
         public Order Update(Order order)
         {
-            var index = _context.Orders.FindIndex(o => o.Id == order.Id);
-
-            if (index == -1) return order;
-
-            _context.Orders[index] = order;
+            _context.Orders.Update(order);
             return order;
         }
 

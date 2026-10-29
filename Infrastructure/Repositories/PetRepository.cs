@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
 
         public List<Pet> GetAll()
         {
-            return _context.Pets;
+            return _context.Pets.ToList();
         }
 
         //id de la mascota
@@ -43,11 +43,7 @@ namespace Infrastructure.Repositories
 
         public Pet Update(Pet pet)
         {
-            var index = _context.Pets.FindIndex(p => p.Id == pet.Id);
-
-            if (index == -1) return pet;
-
-            _context.Pets[index] = pet;
+            _context.Pets.Update(pet);
             return pet;
         }
 

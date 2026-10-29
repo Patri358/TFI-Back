@@ -66,7 +66,7 @@
 //        private async Task<AuthResponseDTO> GenerateToken(User user)
 //        {
 //            // 1) Obtener roles del usuario
-//            var roles = await _roleRepository.GetRolesByUserIdAsync(user.Id);
+//            var roles = await .GetRolesByUserIdAsync(user.Id);
 
 //            // 2) Crear claims
 //            var claims = new List<Claim>
@@ -112,7 +112,7 @@
 //                ExpiresAt = expiresAt,
 //                Email = user.Email ?? string.Empty,
 //                FullName = $"{user.Name}".Trim(),
-//                Roles = roles.Select(r => r.Name).ToList()
+//                Roles = user.Rol)
 //            };
 //        }
 //    }

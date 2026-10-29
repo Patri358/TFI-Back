@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Interfaces
 {
-    public interface IUserService
+    public interface IUserservice
     {
         List<UserDTO> GetAll();
         UserDTO? GetById(int id);

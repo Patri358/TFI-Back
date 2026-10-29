@@ -12,7 +12,7 @@ namespace Domain.Entities
         public ChatStatus Status { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public List<Message> Messages { get; set; } = [];
+        public ICollection<Message> Messages { get; set; } = new List<Message>(); 
     }
 
     public enum ChatStatus

@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
 
         public List<ClinicalRecord> GetAll()
         {
-            return _context.ClinicalRecords;
+            return _context.ClinicalRecords.ToList();
         }
 
         public ClinicalRecord? GetById(int id)
@@ -37,10 +37,7 @@ namespace Infrastructure.Repositories
 
         public ClinicalRecord Update(ClinicalRecord clinicalRecord)
         {
-            var index = _context.ClinicalRecords.FindIndex(cr => cr.Id == clinicalRecord.Id);
-            if (index == -1) return clinicalRecord;
-
-            _context.ClinicalRecords[index] = clinicalRecord;
+            _context.ClinicalRecords.Update(clinicalRecord);
             return clinicalRecord;
         }
 

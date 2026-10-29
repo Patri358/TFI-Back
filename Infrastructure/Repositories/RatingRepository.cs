@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
-using MySqlConnector.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +17,7 @@ namespace Infrastructure.Repositories
 
         public List<Rating> GetAll()
         {
-            return _context.Ratings;
+            return _context.Ratings.ToList();
         }
 
         public Rating? GetById(int id)
@@ -37,10 +36,7 @@ namespace Infrastructure.Repositories
 
         public Rating Update(Rating rating)
         {
-            var index = _context.Ratings.FindIndex(r => r.Id == rating.Id);
-            if (index == -1) return rating;
-
-            _context.Ratings[index] = rating;
+            _context.Ratings.Update(rating);
             return rating;
         }
 

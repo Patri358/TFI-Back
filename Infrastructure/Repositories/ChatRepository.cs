@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -17,13 +18,16 @@ namespace Infrastructure.Repositories
 
         public List<Chat> GetAll()
         {
-            return _context.Chats;
+            return _context.Chats
+                .Include(c => c.Messages)
+                .ToList();
         }
 
         public Chat? GetById(int id)
         {
-            var chat = _context.Chats.FirstOrDefault(c => c.Id == id);
-            if (chat == null) return null;
+            var chat = _context.Chats
+                .Include(c => c.Messages)
+                .FirstOrDefault(c => c.Id == id);
 
             return chat;
         }
@@ -36,10 +40,7 @@ namespace Infrastructure.Repositories
 
         public Chat Update(Chat chat)
         {
-            var index = _context.Chats.FindIndex(c => c.Id == chat.Id);
-            if (index == -1) return chat;
-
-            _context.Chats[index] = chat;
+            _context.Chats.Update(chat);
             return chat;
         }
 

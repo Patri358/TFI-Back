@@ -17,7 +17,7 @@ namespace Infrastructure.Repositories
         }
         public List<Item> GetAll()
         {
-            return _context.Items;
+            return _context.Items.ToList();
         }
 
         public Item? GetById(int id)
@@ -35,10 +35,7 @@ namespace Infrastructure.Repositories
 
         public Item Update(Item item)
         {
-            var index = _context.Items.FindIndex(i => i.Id == item.Id);
-            if (index == -1) return item;
-
-            _context.Items[index] = item;
+            _context.Items.Update(item);
             return item;
         }
 

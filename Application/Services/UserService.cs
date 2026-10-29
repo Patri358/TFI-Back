@@ -8,17 +8,17 @@ using System.Text;
 
 namespace Application.Services
 {
-    public class UserService : IUserService
+    public class Userservice : IUserservice
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        public Userservice(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
         public List<UserDTO> GetAll()
         {
-            var users = _userRepository.GetAll();
-            return users.Select(u => new UserDTO
+            var Users = _userRepository.GetAll();
+            return Users.Select(u => new UserDTO
             {
                 Id = u.Id,
                 Rol = u.Rol,

@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
 
         public List<User> GetAll()
         {
-            return _context.Users;
+            return _context.Users.ToList();
         }
 
         public User? GetById(int id)
@@ -48,14 +48,7 @@ namespace Infrastructure.Repositories
 
         public User Update(User user)
         {
-            var index = _context.Users.FindIndex(u => u.Id == user.Id);
-
-            if (index == -1)
-            {
-                return user;
-            }
-
-            _context.Users[index] = user;
+            _context.Users.Update(user);
             return user;
         }
 

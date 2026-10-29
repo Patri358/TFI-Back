@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
 
         public List<Shift> GetAll()
         {
-            return _context.Shifts;
+            return _context.Shifts.ToList();
         }
 
         public Shift? GetById(int id)
@@ -37,10 +37,7 @@ namespace Infrastructure.Repositories
 
         public Shift Update(Shift shift)
         {
-            var index = _context.Shifts.FindIndex(s => s.Id == shift.Id);
-            if (index == -1) return shift;
-
-            _context.Shifts[index] = shift;
+            _context.Shifts.Update(shift);
             return shift;
         }
 

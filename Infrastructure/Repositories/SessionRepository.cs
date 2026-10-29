@@ -1,10 +1,11 @@
 ﻿using Application.Interfaces;
-using Infrastructure.Persistence;
+using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Domain.Entities;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Infrastructure.Repositories
 {
@@ -18,7 +19,7 @@ namespace Infrastructure.Repositories
 
         public List<Session> GetAll()
         {
-            return _context.Sessions;
+            return _context.Sessions.ToList();
         }
 
         public Session? GetById(int id)
@@ -29,28 +30,25 @@ namespace Infrastructure.Repositories
             return session;
         }
 
-        public Session Add(Session Session)
+        public Session Add(Session session)
         {
-            _context.Sessions.Add(Session);
-            return Session;
+            _context.Sessions.Add(session);
+            return session;
         }
 
-        public Session Update(Session Session)
+        public Session Update(Session session)
         {
-            var index = _context.Sessions.FindIndex(s => s.Id == Session.Id);
-            if (index == -1) return Session;
-
-            _context.Sessions[index] = Session;
-            return Session;
+            _context.Sessions.Update(session);
+            return session;
         }
 
         public Session? Delete(int id)
         {
-            var Session = GetById(id);
-            if (Session == null) return null;
+            var session = GetById(id);
+            if (session == null) return null;
 
-            _context.Sessions.Remove(Session);
-            return Session;
+            _context.Sessions.Remove(session);
+            return session;
         }
 
     }
