@@ -16,34 +16,45 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List <Pet> GetAll()
+        public List<Pet> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Pets.ToList();
         }
 
-        public Pet GetByClientId(int clientId)
+        //id de la mascota
+        public Pet? GetById(int id)
         {
-            throw new NotImplementedException();
+            var pet = _context.Pets.FirstOrDefault(p => p.Id == id);
+            return pet;
         }
 
-        public Pet GetById(int id)
+        // id del dueño
+        public Pet? GetByClientId(int clientId)
         {
-            throw new NotImplementedException();
+            var pet = _context.Pets.FirstOrDefault(p => p.ClientId == clientId);
+            return pet;
         }
 
         public Pet Add(Pet pet)
         {
-            throw new NotImplementedException();
+            _context.Pets.Add(pet);
+            return pet;
         }
 
         public Pet Update(Pet pet)
         {
-            throw new NotImplementedException();
+            _context.Pets.Update(pet);
+            return pet;
         }
 
         public Pet? Delete(int id)
         {
-            throw new NotImplementedException();
+            var pet = GetById(id);
+
+            if (pet == null) return null;
+            
+            _context.Pets.Remove(pet);
+            return pet;
         }
     }
 }

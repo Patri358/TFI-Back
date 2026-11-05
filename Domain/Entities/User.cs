@@ -7,12 +7,21 @@ namespace Domain.Entities
     public class User
     {
         public int Id { get; set; }
+        public Role Rol { get; set; }
         public string Dni { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Hash { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
         public string Telephone { get; set; } = string.Empty;
-        public string State { get; set; } = string.Empty;
+        public bool State { get; set; } = true;
         public DateOnly BirthDate { get; set; }
+    }
+
+    public enum Role
+    {
+        Cliente,
+        Veterinario,
+        Recepcionista,
+        Admin
     }
 }

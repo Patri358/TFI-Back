@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Entities
+namespace Application.Models.ReasonCancellation
 {
-    public class Role
+    public class ReasonCancellationDTO
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
     }
 }

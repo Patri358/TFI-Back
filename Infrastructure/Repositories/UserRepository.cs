@@ -4,7 +4,10 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 
 namespace Infrastructure.Repositories
@@ -19,7 +22,7 @@ namespace Infrastructure.Repositories
 
         public List<User> GetAll()
         {
-            return _context.Users;
+            return _context.Users.ToList();
         }
 
         public User? GetById(int id)
@@ -32,6 +35,11 @@ namespace Infrastructure.Repositories
             return _context.Users.FirstOrDefault(u => u.Name == name);
         }
 
+        public User? GetByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        }
+
         public User Add(User user)
         {
             _context.Users.Add(user);
@@ -40,20 +48,13 @@ namespace Infrastructure.Repositories
 
         public User Update(User user)
         {
-            var index = _context.Users.FindIndex(u => u.Id == user.Id);
-
-            if (index == -1)
-            {
-                return user;
-            }
-
-            _context.Users[index] = user;
+            _context.Users.Update(user);
             return user;
         }
 
         public User? Delete(int id)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            var user = GetById(id);
             if (user != null)
             {
                 _context.Users.Remove(user);
@@ -61,30 +62,30 @@ namespace Infrastructure.Repositories
             return user;
         }
 
-        //public async Task<List<User>> GetAllAsync()
-        //{
-        //    return await _context.User.ToListAsync();
-        //}
+        // ASYNC 
+        // ------------------------------------------------------------------------------------------------------------------------
+        public async Task SaveChangesAsync()
+        {
+            await SaveChangesAsync();
+        }
 
-        //public async Task<User?> GetByIdAsync(int id)
-        //{
-        //    return await _context.User.FindAsync(id);
-        //}
+        public async Task AddAsync(User user)
+        {
+            _context.Users.Add(user);
+            await Task.CompletedTask;
+            SaveChangesAsync();
+        }
 
-        //public async Task AddAsync(User entity)
-        //{
-        //    await _context.User.AddAsync(entity);
-        //    await _context.SaveChangesAsync();
-        //}
-        //public void Update(User entity)
-        //{
-        //    _context.User.Update(entity);
-        //    _context.SaveChanges();
-        //}
-        //public void Delete(User entity)
-        //{
-        //    _context.User.Remove(entity);
-        //    _context.SaveChanges();
-        //}
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            return await Task.FromResult(user);
+        }
+
+        public async Task<User?> GetByNameAsync(string name)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Name == name);
+            return await Task.FromResult(user);
+        }
     }
 }

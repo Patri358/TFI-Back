@@ -1,40 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Interfaces;
 using Application.Models;
-using Application.Interfaces;
-using System.Runtime.InteropServices.Marshalling;
-using Microsoft.EntityFrameworkCore.Query;
+using Application.Models.User;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query;
+using System.Runtime.InteropServices.Marshalling;
+using System.Xml.Linq;
 
 namespace Presentation.Controllers
 {
     [ApiController]
-    // La ruta pública esperada es plural: /api/users/{id}.
-    // [controller] produciría /api/User/{id} porque el nombre de la clase
-    // es UserController.
-    [Route("api/users")]
+    [Route("api/Users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IUserservice _Userservice;
+        public UserController(IUserservice Userservice)
         {
-            _userService = userService;
+            _Userservice = Userservice;
         }
 
         // Buscar todos
         [HttpGet]
         public ActionResult<List<UserDTO>> Get()
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            var Users = _Userservice.GetAll();
+            return Ok(Users);
         }
 
         // Buscar por id
         [HttpGet("{id}")]
         public ActionResult<UserDTO> GetById([FromRoute] int id)
         {
-            var user = _userService.GetById(id);
-
-            if(user == null) return NotFound("Usuario no encontrado");
+            var user = _Userservice.GetById(id);
+            if(user == null) return NotFound($"No se encontró el usuario con el Id: {id}");
 
             return Ok(user);
         }
@@ -43,9 +41,8 @@ namespace Presentation.Controllers
         [HttpGet("nombre/{name}")]
         public ActionResult<UserDTO> GetByName([FromRoute] string name)
         {
-            var user = _userService.GetByName(name);
-
-            if(user == null) return NotFound("Usuario no encontrado");
+            var user = _Userservice.GetByName(name);
+            if(user == null) return NotFound($"No se encontró el usuario con el nombre: {name}");
 
             return Ok(user);
         }
@@ -54,41 +51,35 @@ namespace Presentation.Controllers
         [HttpPost]
         public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
         {
-            var usuarioCreado = _userService.Add(user);
-
-            if (usuarioCreado == null) return NotFound();
+            var createdUser = _Userservice.Add(user);
+            if (createdUser == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
             
             return CreatedAtAction(
-                nameof(GetById),
-                new {id = usuarioCreado.Id},
-                usuarioCreado
-                );
+                actionName: nameof(GetById),
+                routeValues: new {id = createdUser.Id},
+                value: createdUser
+            );
         }
 
         // Actualizar
         [HttpPut("{id}")]
         public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
         {
-            if (user == null) return BadRequest("El usuario no puede estar vacío");
+            if (user == null) return BadRequest("Los datos del usuario están incompletos");
+            if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del usuario");
 
-            user.Id = id;
+            var updateUser = _Userservice.Update(user);
+            if (updateUser == null) return NotFound($"El usuario con el Id: {id} no pudo ser actualizado"); 
 
-            var usuarioActualizado = _userService.Update(user);
-
-            if (usuarioActualizado == null) return NotFound(); 
-
-            return Ok(usuarioActualizado);
+            return Ok(updateUser);
         }
 
         // Eliminar
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            var user = _userService.Delete(id);
-            if(user == null)
-            {
-                return NotFound("Usuario no encontrado");
-            }
+            var user = _Userservice.Delete(id);
+            if(user == null) return NotFound($"El usuario con el Id: {id} no pudo ser eliminado");
 
             return Ok(user);
         }
