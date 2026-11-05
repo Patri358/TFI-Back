@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        List<T> GetAll();
-        T? GetById(int id);
-        T Add(T entity);
-        T Update(T entity);
-        T? Delete(int id);
+        Task <List<T>> GetAllAsync();
+        Task<T?> GetByIdAsync(int id);
+        Task<T?> AddAsync(T entity);
+        Task<T?> UpdateAsync(T entity);
+        Task<T?> DeleteAsync(int id);
+        Task SaveChangesAsync();
     }
 }

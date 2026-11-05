@@ -3,21 +3,23 @@ using Application.Models;
 using Application.Models.User;
 using Domain.Entities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class Userservice : IUserservice
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public Userservice(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
-        public List<UserDTO> GetAll()
+        public async Task <List<UserDTO>> GetAllAsync()
         {
-            var Users = _userRepository.GetAll();
+            var Users = await _userRepository.GetAllAsync();
             return Users.Select(u => new UserDTO
             {
                 Id = u.Id,
@@ -31,9 +33,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public UserDTO? GetById(int id)
+        public async Task<UserDTO?> GetByIdAsync(int id)
         {
-            var user = _userRepository.GetById(id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null) return null;
 
             return new UserDTO
@@ -49,9 +51,9 @@ namespace Application.Services
             };
         }
 
-        public UserDTO? GetByName(string name)
+        public async Task<UserDTO?> GetByNameAsync(string name)
         {
-            var user = _userRepository.GetByName(name);
+            var user = await _userRepository.GetByNameAsync(name);
             if (user == null) return null;
 
             return new UserDTO
@@ -67,7 +69,7 @@ namespace Application.Services
             };
         }
         
-        public UserDTO? Add(CreateUserDTO user)
+        public async Task<UserDTO?> AddAsync(CreateUserDTO user)
         {
             if (user == null) return null;
 
@@ -82,7 +84,9 @@ namespace Application.Services
                 BirthDate = user.BirthDate
             };
 
-            var addedUser = _userRepository.Add(newUser);
+            var addedUser = await _userRepository.AddAsync(newUser);
+
+            if (addedUser == null) return null;
 
             var newUserDTO = new UserDTO
             {
@@ -99,12 +103,11 @@ namespace Application.Services
             return newUserDTO;
         }
 
-        public UserDTO? Update(UserDTO user)
+        public async Task<UserDTO?> UpdateAsync(UserDTO user)
         {
-            var updateUser = _userRepository.GetById(user.Id);
+            var updateUser = await _userRepository.GetByIdAsync(user.Id);
             if (updateUser == null) return null;
 
-            updateUser.Id = user.Id;
             updateUser.Rol = user.Rol;
             updateUser.Dni = user.Dni;
             updateUser.Name = user.Name;
@@ -113,7 +116,7 @@ namespace Application.Services
             updateUser.State = user.State;
             updateUser.BirthDate = user.BirthDate;
             
-            _userRepository.Update(updateUser);
+            await _userRepository.UpdateAsync(updateUser);
 
             return new UserDTO
             {
@@ -128,12 +131,12 @@ namespace Application.Services
             };
         }
 
-        public UserDTO? Delete(int id)
+        public async Task<UserDTO?> DeleteAsync(int id)
         {
-            var user = _userRepository.GetById(id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null) return null;
 
-            _userRepository.Delete(id);
+            await _userRepository.DeleteAsync(id);
 
             return new UserDTO
             {
@@ -147,6 +150,5 @@ namespace Application.Services
                 BirthDate = user.BirthDate
             };
         }
-
     }
 }

@@ -1,11 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.User;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Runtime.InteropServices.Marshalling;
-using System.Xml.Linq;
 
 namespace Presentation.Controllers
 {
@@ -13,25 +9,25 @@ namespace Presentation.Controllers
     [Route("api/Users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserservice _Userservice;
-        public UserController(IUserservice Userservice)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _Userservice = Userservice;
+            _userService = userService;
         }
 
         // Buscar todos
         [HttpGet]
-        public ActionResult<List<UserDTO>> Get()
+        public async Task<ActionResult<List<UserDTO>>> Get()
         {
-            var Users = _Userservice.GetAll();
+            var Users = await _userService.GetAllAsync();
             return Ok(Users);
         }
 
         // Buscar por id
         [HttpGet("{id}")]
-        public ActionResult<UserDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<UserDTO>> GetById([FromRoute] int id)
         {
-            var user = _Userservice.GetById(id);
+            var user = await _userService.GetByIdAsync(id);
             if(user == null) return NotFound($"No se encontró el usuario con el Id: {id}");
 
             return Ok(user);
@@ -39,9 +35,9 @@ namespace Presentation.Controllers
 
         // Buscar por nombre
         [HttpGet("nombre/{name}")]
-        public ActionResult<UserDTO> GetByName([FromRoute] string name)
+        public async Task<ActionResult<UserDTO>> GetByName([FromRoute] string name)
         {
-            var user = _Userservice.GetByName(name);
+            var user = await _userService.GetByNameAsync(name);
             if(user == null) return NotFound($"No se encontró el usuario con el nombre: {name}");
 
             return Ok(user);
@@ -49,10 +45,10 @@ namespace Presentation.Controllers
 
         // Crear usuario
         [HttpPost]
-        public ActionResult<UserDTO> Post([FromBody] CreateUserDTO user)
+        public async Task<ActionResult<UserDTO>> Post([FromBody] CreateUserDTO user)
         {
-            var createdUser = _Userservice.Add(user);
-            if (createdUser == null) return NotFound($"El usuario: {user.Name} no pudo ser creado");
+            var createdUser = await _userService.AddAsync(user);
+            if (createdUser == null) return BadRequest($"El usuario: {user.Name} no pudo ser creado");
             
             return CreatedAtAction(
                 actionName: nameof(GetById),
@@ -63,12 +59,12 @@ namespace Presentation.Controllers
 
         // Actualizar
         [HttpPut("{id}")]
-        public ActionResult<UserDTO> Put([FromBody] UserDTO user, [FromRoute] int id)
+        public async Task<ActionResult<UserDTO>> Put([FromBody] UserDTO user, [FromRoute] int id)
         {
             if (user == null) return BadRequest("Los datos del usuario están incompletos");
             if (user.Id != id ) return BadRequest("El Id de la ruta no coincide con el del usuario");
 
-            var updateUser = _Userservice.Update(user);
+            var updateUser = await _userService.UpdateAsync(user);
             if (updateUser == null) return NotFound($"El usuario con el Id: {id} no pudo ser actualizado"); 
 
             return Ok(updateUser);
@@ -76,9 +72,9 @@ namespace Presentation.Controllers
 
         // Eliminar
         [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id)
+        public async Task <ActionResult<UserDTO>>  Delete([FromRoute] int id)
         {
-            var user = _Userservice.Delete(id);
+            var user = await _userService.DeleteAsync(id);
             if(user == null) return NotFound($"El usuario con el Id: {id} no pudo ser eliminado");
 
             return Ok(user);

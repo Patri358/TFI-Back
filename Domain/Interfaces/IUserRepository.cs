@@ -10,11 +10,7 @@ namespace Application.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        User? GetByName(string Name);
-        User? GetByEmail(string email);
+        Task<User?> GetByNameAsync(string Name);
         Task<User?> GetByEmailAsync(string email);
-        Task AddAsync(User user);
-        Task SaveChangesAsync();
-        Task<User?> GetByNameAsync(string name);
     }
 }

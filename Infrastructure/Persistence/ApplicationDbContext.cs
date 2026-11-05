@@ -33,6 +33,10 @@ namespace Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.Entity<Item>().Property(i => i.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(o => o.Total).HasPrecision(18, 2);
+            modelBuilder.Entity<OrderItem>().Property(oi => oi.UnitPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<Service>().Property(s => s.Price).HasPrecision(18, 2);
         }
     }
 }

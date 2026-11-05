@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Application.Interfaces
 {
-    public interface IUserservice
+    public interface IUserService
     {
-        List<UserDTO> GetAll();
-        UserDTO? GetById(int id);
-        UserDTO? GetByName(string name);
-        UserDTO? Add(CreateUserDTO createUser);
-        UserDTO? Update(UserDTO updateUser);
-        UserDTO? Delete(int id);
+        Task <List<UserDTO>> GetAllAsync();
+        Task <UserDTO?> GetByIdAsync(int id);
+        Task <UserDTO?> GetByNameAsync(string name);
+        Task <UserDTO?> AddAsync(CreateUserDTO createUser);
+        Task <UserDTO?> UpdateAsync(UserDTO updateUser);
+        Task <UserDTO?> DeleteAsync(int id);
     }
 }
