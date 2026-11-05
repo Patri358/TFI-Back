@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,5 +14,6 @@ namespace Application.Models.Auth
         public string Telephone { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
         public DateOnly BirthDate { get; set; }
+        public Role Rol { get; set; } = Role.Cliente;
     }
 }

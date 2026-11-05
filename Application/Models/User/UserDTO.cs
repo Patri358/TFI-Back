@@ -13,7 +13,7 @@ namespace Application.Models.User
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Telephone { get; set; } = string.Empty;
-        public string State { get; set; } = string.Empty;
+        public bool State { get; set; } = true;
         public DateOnly BirthDate { get; set; }
     }
 }

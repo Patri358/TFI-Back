@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Application.Models.Auth
@@ -9,6 +10,6 @@ namespace Application.Models.Auth
         public DateTime ExpiresAt { get; set; }
         public string Email { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
-        public List<string> Roles { get; set; } = new List<string>();
+        public Role Rol { get; set; }
     }
 }

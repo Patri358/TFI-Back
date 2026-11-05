@@ -56,13 +56,13 @@ namespace Presentation.Controllers
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-            var roles = User.FindAll(System.Security.Claims.ClaimTypes.Role).Select(r => r.Value).ToList();
+            var rol = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
             return Ok(new
             {
                 UserId = userId,
                 Email = email,
-                Roles = roles,
+                Rol= rol,
                 IsAuthenticated = User.Identity?.IsAuthenticated
             });
         }

@@ -15,6 +15,6 @@ namespace Application.Interfaces
         Task<User?> GetByEmailAsync(string email);
         Task AddAsync(User user);
         Task SaveChangesAsync();
-
+        Task<User?> GetByNameAsync(string name);
     }
 }

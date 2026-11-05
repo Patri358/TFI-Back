@@ -14,7 +14,7 @@ namespace Application.Models
         public string Email { get; set; } = string.Empty;
         public string Hash { get; set; } = string.Empty;
         public string Telephone { get; set; } = string.Empty;
-        public string State { get; set; } = string.Empty;
+        public bool State { get; set; } = true;
         public DateOnly BirthDate { get; set; }
     }
 }
