@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Domain.Entities;
 
 namespace Application.Models.ShiftEvent
 {
@@ -13,7 +14,7 @@ namespace Application.Models.ShiftEvent
         public int? ReasonConsultationId { get; set; }
         public int? NewVeterinaryId { get; set; }
         public int? OldVeterinaryId { get; set; }
-        public string Type { get; set; } = string.Empty;
+        public TypeShiftEvent Type { get; set; }
         public DateTime Date { get; set; }
     }
 }

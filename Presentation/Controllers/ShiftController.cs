@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models.Shift;
+using Application.Models.ShiftEvent;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -15,25 +16,25 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ShiftDTO>> Get()
+        public async Task<ActionResult<List<ShiftDTO>>> Get()
         {
-            var shifts = _shiftService.GetAll();
+            var shifts = await _shiftService.GetAllAsync();
             return Ok(shifts);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ShiftDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<ShiftDTO>> GetById([FromRoute] int id)
         {
-            var shift = _shiftService.GetById(id);
+            var shift = await _shiftService.GetByIdAsync(id);
             if (shift == null) return NotFound($"No se encontró el turno con Id: {id}");
 
             return Ok(shift);
         }
 
         [HttpPost]
-        public ActionResult<ShiftDTO> Add([FromBody] CreateShiftDTO shift)
+        public async Task<ActionResult<ShiftDTO>> Add([FromBody] CreateShiftWithEventDTO request)
         {
-            var createdShift = _shiftService.Add(shift);
+            var createdShift = await _shiftService.AddAsync(request.shift, request.shiftEvent);
             if (createdShift == null) return BadRequest("No se pudo crear el turno");
 
             return CreatedAtAction(
@@ -44,21 +45,21 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ShiftDTO> Update([FromBody] ShiftDTO shift, [FromRoute] int id)
+        public async Task<ActionResult<ShiftDTO>> Update([FromRoute] int id, [FromBody] UpdateShiftWithEventDTO request)
         {
-            if (shift == null) return BadRequest("Los datos del turno están incompletos");
-            if (shift.Id != id) return BadRequest("El Id de la ruta no coincide con el del turno");
+            if (request == null) return BadRequest("Los datos del turno están incompletos");
+            if (request.shift.Id != id) return BadRequest("El Id de la ruta no coincide con el del turno");
 
-            var updatedShift = _shiftService.Update(shift);
-            if (updatedShift == null) return NotFound($"No se pudo actualizar el turno con Id: {shift.Id}");
+            var updatedShift = await _shiftService.UpdateAsync(request.shift, request.shiftEvent);
+            if (updatedShift == null) return NotFound($"No se pudo actualizar el turno con Id: {request.shift.Id}");
 
             return Ok(updatedShift);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ShiftDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<ShiftDTO>> Delete([FromRoute] int id)
         {
-            var shift = _shiftService.Delete(id);
+            var shift = await _shiftService.DeleteAsync(id);
             if (shift == null) return NotFound($"El turno con el Id:{id} no pudo ser eliminado");
 
             return Ok(shift);

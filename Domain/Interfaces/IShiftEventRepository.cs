@@ -6,9 +6,11 @@ using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IShiftEventRepository : IRepository<ShiftEvent>
+    public interface IShiftEventRepository
     {
-        Task<IEnumerable<ShiftEvent>> GetByShiftIdAsync(int shiftId);
-        Task<IEnumerable<ShiftEvent>> GetByUserIdAsync(int userId);
+        Task<List<ShiftEvent>> GetByShiftIdAsync(int shiftId);
+        Task<List<ShiftEvent>> GetByUserIdAsync(int userId);
+        Task<ShiftEvent?> AddAsync(ShiftEvent shiftEvent);
+        Task SaveChangesAsync();
     }
 }

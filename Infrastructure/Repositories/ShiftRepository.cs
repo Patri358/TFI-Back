@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Domain.Interfaces;
 using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -16,38 +17,61 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Shift> GetAll()
+        public async Task<List<Shift>> GetAllAsync()
         {
-            return _context.Shifts.ToList();
+            return await _context.Shifts.ToListAsync();
         }
-
-        public Shift? GetById(int id)
+        public async Task<Shift?> GetByIdAsync(int id)
         {
-            var shift = _context.Shifts.FirstOrDefault(s => s.Id == id);
-            if (shift == null) return null;
-
+            var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.Id == id);
             return shift;
         }
 
-        public Shift Add(Shift shift)
+        public async Task<List<Shift>> GetByClientIdAsync(int clientId)
         {
+            return await _context.Shifts.Where(s => s.ClientId == clientId).ToListAsync();
+        }
+
+        public async Task<List<Shift>> GetByVeterinaryIdAsync(int vetId)
+        {
+            return await _context.Shifts.Where(s => s.VeterinaryId == vetId).ToListAsync();
+        }
+
+        public async Task<List<Shift>> GetByPetIdAsync(int petId)
+        {
+            return await _context.Shifts.Where(s => s.PetId == petId).ToListAsync();
+        }
+        public async Task<List<Shift>> GetByStatusAsync(ShiftStatus status)
+        {
+            return await _context.Shifts.Where(s => s.Status == status).ToListAsync();
+        }
+
+        public async Task<Shift?> AddAsync(Shift shift)
+        {
+            if (shift == null) return null;
+
             _context.Shifts.Add(shift);
             return shift;
         }
 
-        public Shift Update(Shift shift)
+        public async Task<Shift?> UpdateAsync(Shift shift)
         {
             _context.Shifts.Update(shift);
             return shift;
         }
 
-        public Shift? Delete(int id)
+        public async Task<Shift?> DeleteAsync(int id)
         {
-            var shift = GetById(id);
-            if(shift == null) return null;
+            var shift = await GetByIdAsync(id);
+            if (shift == null) return null;
 
             _context.Shifts.Remove(shift);
             return shift;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

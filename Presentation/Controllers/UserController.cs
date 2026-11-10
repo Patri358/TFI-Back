@@ -72,7 +72,7 @@ namespace Presentation.Controllers
 
         // Eliminar
         [HttpDelete("{id}")]
-        public async Task <ActionResult<UserDTO>>  Delete([FromRoute] int id)
+        public async Task<ActionResult<UserDTO>> Delete([FromRoute] int id)
         {
             var user = await _userService.DeleteAsync(id);
             if(user == null) return NotFound($"El usuario con el Id: {id} no pudo ser eliminado");

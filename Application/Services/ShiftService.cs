@@ -1,24 +1,28 @@
 ﻿using Application.Interfaces;
 using Application.Models.Shift;
+using Application.Models.ShiftEvent;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace Application.Services
 {
-    public class ShiftService : IShiftService
+    public class ShiftService : IShiftService, IShiftEventService
     {
         private readonly IShiftRepository _shiftRepository;
-        public ShiftService(IShiftRepository shiftRepository)
+        private readonly IShiftEventRepository _shiftEventRepository;
+        public ShiftService(IShiftRepository shiftRepository, IShiftEventRepository shiftEventRepository)
         {
             _shiftRepository = shiftRepository;
+            _shiftEventRepository = shiftEventRepository;
         }
 
-        public List<ShiftDTO> GetAll()
+        public async Task<List<ShiftDTO>> GetAllAsync()
         {
-            var shifts = _shiftRepository.GetAll();
+            var shifts = await _shiftRepository.GetAllAsync();
             return shifts.Select(s => new ShiftDTO
             {
                  Id = s.Id,
@@ -33,10 +37,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public ShiftDTO? GetById(int id)
+        public async Task<ShiftDTO?> GetByIdAsync(int id)
         {
-            var shift  = _shiftRepository.GetById(id);
-
+            var shift = await _shiftRepository.GetByIdAsync(id);
             if (shift == null) return null;
 
             return new ShiftDTO
@@ -53,9 +56,12 @@ namespace Application.Services
             };
         }
 
-        public ShiftDTO? Add(CreateShiftDTO shift)
+        // se añade la auditoria por medio del add del turno
+        public async Task <ShiftDTO?> AddAsync(CreateShiftDTO shift, CreateShiftEventDTO shiftEvent)
         {
-            if (shift == null) return null;
+            if (shift == null || shiftEvent == null) return null;
+
+            var now = DateTime.Now;
 
             var newShift = new Shift
             {
@@ -65,11 +71,30 @@ namespace Application.Services
                 ServiceId = shift.ServiceId,
                 Status = ShiftStatus.Pendiente,
                 ClientObs = shift.ClientObs,
-                InitialDate = DateTime.Now,
+                InitialDate = now,
                 EndDate = null
             };
 
-            var addedShift = _shiftRepository.Add(newShift);
+            var addedShift = await _shiftRepository.AddAsync(newShift);
+            await _shiftRepository.SaveChangesAsync();
+
+            if (addedShift == null) return null;
+
+            var newShiftEvent = new ShiftEvent
+            {
+                UserId = shiftEvent.UserId,
+                ShiftId = addedShift.Id,
+                ReasonConsultationId = shiftEvent.ReasonConsultationId,
+                ReasonCancellationId = shiftEvent.ReasonCancellationId,
+                NewVeterinaryId = shiftEvent.NewVeterinaryId,
+                OldVeterinaryId = shiftEvent.OldVeterinaryId,
+                Type = TypeShiftEvent.Creacion,
+                Date = now
+            };
+
+            var addedShiftEvent = await _shiftEventRepository.AddAsync(newShiftEvent);
+            await _shiftEventRepository.SaveChangesAsync();
+            if (addedShiftEvent == null) return null;
 
             var newShiftDTO = new ShiftDTO
             {
@@ -83,14 +108,15 @@ namespace Application.Services
                 InitialDate = addedShift.InitialDate,
                 EndDate = addedShift.EndDate
             };
-
             return newShiftDTO;
         }
 
-        public ShiftDTO? Update(ShiftDTO shift)
+        // se añade la auditoria por medio de la actualización del turno
+        public async Task<ShiftDTO?> UpdateAsync(ShiftDTO shift, CreateShiftEventDTO shiftEvent)
         {
-            var updateShift = _shiftRepository.GetById(shift.Id);
+            if (shift == null || shiftEvent == null) return null;
 
+            var updateShift = await _shiftRepository.GetByIdAsync(shift.Id);
             if (updateShift == null) return null;
 
             updateShift.PetId = shift.PetId;
@@ -101,7 +127,23 @@ namespace Application.Services
             updateShift.ClientObs = shift.ClientObs;
             updateShift.InitialDate = shift.InitialDate;
 
-            _shiftRepository.Update(updateShift);
+            await _shiftRepository.UpdateAsync(updateShift);
+            await _shiftRepository.SaveChangesAsync();
+
+            // se crea la auditoría pero es de tipo actualización, finalización o cancelación
+            var updateShiftEvent = new ShiftEvent
+            {
+                UserId = shiftEvent.UserId,
+                ShiftId = updateShift.Id,
+                ReasonConsultationId = shiftEvent.ReasonConsultationId,
+                ReasonCancellationId = shiftEvent.ReasonCancellationId,
+                NewVeterinaryId = shiftEvent.NewVeterinaryId,
+                OldVeterinaryId = shiftEvent.OldVeterinaryId,
+                Type = shiftEvent.Type,
+                Date = DateTime.Now
+            };
+            await _shiftEventRepository.AddAsync(updateShiftEvent);
+            await _shiftEventRepository.SaveChangesAsync();
 
             return new ShiftDTO
             {
@@ -117,14 +159,13 @@ namespace Application.Services
             };
         }
 
-        public ShiftDTO? Delete(int id)
+        public async Task<ShiftDTO?> DeleteAsync(int id)
         {
-            var shift = _shiftRepository.GetById(id);
-
+            var shift = await _shiftRepository.GetByIdAsync(id);
             if (shift == null) return null;
 
-            _shiftRepository.Delete(shift.Id);
-
+            await _shiftRepository.DeleteAsync(shift.Id);
+            await _shiftRepository.SaveChangesAsync();
             return new ShiftDTO
             {
                 Id = shift.Id,
@@ -137,6 +178,44 @@ namespace Application.Services
                 InitialDate = shift.InitialDate,
                 EndDate = shift.EndDate
             };
+        }
+
+        //------------------------------------ ShiftEvent (Tabla de auditoría) ------------------------------------
+        public async Task<List<ShiftEventDTO>> GetByShiftIdAsync(int shiftId)
+        {
+            var shiftsEvent = await _shiftEventRepository.GetByShiftIdAsync(shiftId);
+
+            return shiftsEvent.Select(se => new ShiftEventDTO
+            {
+                Id = se.Id,
+                UserId = se.UserId,
+                ShiftId = se.ShiftId,
+                ReasonCancellationId = se.ReasonCancellationId,
+                ReasonConsultationId = se.ReasonConsultationId,
+                NewVeterinaryId = se.NewVeterinaryId,
+                OldVeterinaryId = se.OldVeterinaryId,
+                Type = se.Type,
+                Date = se.Date
+            }).ToList();
+
+        }
+
+        public async Task<List<ShiftEventDTO>> GetByUserIdAsync(int userId)
+        {
+            var shiftsEvent = await _shiftEventRepository.GetByUserIdAsync(userId);
+
+            return shiftsEvent.Select(se => new ShiftEventDTO
+            {
+                Id = se.Id,
+                UserId = se.UserId,
+                ShiftId = se.ShiftId,
+                ReasonCancellationId = se.ReasonCancellationId,
+                ReasonConsultationId = se.ReasonConsultationId,
+                NewVeterinaryId = se.NewVeterinaryId,
+                OldVeterinaryId = se.OldVeterinaryId,
+                Type = se.Type,
+                Date = se.Date
+            }).ToList();
         }
     }
 }
