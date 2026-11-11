@@ -7,10 +7,10 @@ namespace Application.Interfaces
 {
     public interface ISessionService
     {
-        public List<SessionDTO> GetAll();
-        public SessionDTO? GetById(int id);
-        public SessionDTO Add(CreateSessionDTO session);
-        public SessionDTO? Update(SessionDTO session);
-        public SessionDTO? Delete(int id);
+        Task<List<SessionDTO>> GetAllAsync();
+        Task<SessionDTO?> GetByIdAsync(int id);
+        Task<SessionDTO> AddAsync(CreateSessionDTO session);
+        Task<SessionDTO?> UpdateAsync(SessionDTO session);
+        Task<SessionDTO?> DeleteAsync(int id);
     }
 }

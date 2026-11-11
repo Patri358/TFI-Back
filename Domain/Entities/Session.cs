@@ -10,7 +10,9 @@ namespace Domain.Entities
         public int UserId { get; set; }
         public string Token { get; set; } = string.Empty;
         public DateTime EmissionDate { get; set; } = DateTime.Now;
-        public DateTime RevocationDate { get; set; }
+        public DateTime? RevocationDate { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }
+
+// verificar si se guarda la sesión inactiva

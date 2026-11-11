@@ -5,7 +5,6 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Infrastructure.Repositories
 {
@@ -17,9 +16,10 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Session> GetAll()
+        public async Task<List<Session>> GetAllAsync()
         {
-            return _context.Sessions.ToList();
+            var sessions = _context.Sessions.ToListAsync();
+            return sessions;
         }
 
         public Session? GetById(int id)
@@ -50,6 +50,5 @@ namespace Infrastructure.Repositories
             _context.Sessions.Remove(session);
             return session;
         }
-
     }
 }

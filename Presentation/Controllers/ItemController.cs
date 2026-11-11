@@ -16,26 +16,34 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ItemDTO>> Get()
+        public async Task<ActionResult<List<ItemDTO>>> Get()
         {
-            var items = _itemService.GetAll();
+            var items = await _itemService.GetAllAsync();
             return Ok(items);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ItemDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<ItemDTO>> GetById([FromRoute] int id)
         {
-            var item = _itemService.GetById(id);
+            var item = await _itemService.GetByIdAsync(id);
             if (item == null) return NotFound($"No se encontró el Item con el Id: {id}");
 
             return Ok(item);
         }
 
-        [HttpPost]
-        public ActionResult<ItemDTO> Add(CreateItemDTO item)
+        [HttpGet("(available)")]
+        public async Task<ActionResult<List<ItemDTO>>> GetAvailableItems()
         {
-            var createdItem = _itemService.Add(item);
-            if (createdItem == null) return BadRequest($"El item: {item.Name} no pudo ser creado");
+            var availableItems = await _itemService.GetAvailableItemsAsync();
+            return Ok(availableItems);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ItemDTO>> AddAsync(CreateItemDTO item)
+        {
+            var createdItem = await _itemService.AddAsync(item);
+            if (createdItem == null) 
+                return BadRequest($"El item: {item.Name} no pudo ser creado");
 
             return CreatedAtAction(
                 actionName: nameof(GetById),
@@ -45,22 +53,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ItemDTO> Update([FromBody] ItemDTO item, [FromRoute] int id)
+        public async Task<ActionResult<ItemDTO>> Update([FromBody] ItemDTO item, [FromRoute] int id)
         {
-            if (item == null) return BadRequest("Los datos del item están incompletos");
-            if (item.Id != id) return BadRequest("El Id de la ruta no coincide con el del item");
+            if (item == null) 
+                return BadRequest("Los datos del item están incompletos");
+            if (item.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el del item");
 
-            var updatedItem = _itemService.Update(item);
-            if (updatedItem == null) return NotFound($"No se encontró el Item con el Id: {id}");
+            var updatedItem = await _itemService.UpdateAsync(item);
+            if (updatedItem == null) 
+                return NotFound($"No se encontró el Item con el Id: {id}");
 
             return Ok(updatedItem);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ItemDTO> Delete(int id)
+        public async Task<ActionResult<ItemDTO>> DeleteAsync(int id)
         {
-            var item = _itemService.Delete(id);
-            if (item == null) return NotFound($"El Item con el Id:{id} no pudo ser eliminado");
+            var item = await _itemService.DeleteAsync(id);
+            if (item == null) 
+                return NotFound($"El Item con el Id:{id} no pudo ser eliminado");
 
             return Ok(item);
         }

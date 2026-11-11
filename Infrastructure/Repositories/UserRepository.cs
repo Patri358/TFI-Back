@@ -43,8 +43,6 @@ namespace Infrastructure.Repositories
         public async Task<User?> AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-
             return user;
         }
 
@@ -53,7 +51,6 @@ namespace Infrastructure.Repositories
             if (user == null) return null;
 
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
             return user;
         }
 
@@ -63,7 +60,6 @@ namespace Infrastructure.Repositories
             if (user == null) return null;
 
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
             return user;
         }
 

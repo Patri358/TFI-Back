@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Application.Services
 {
@@ -16,9 +17,9 @@ namespace Application.Services
             _itemRepository = itemRepository;
         }
 
-        public List<ItemDTO> GetAll()
+        public async Task<List<ItemDTO>> GetAllAsync()
         {
-            var items = _itemRepository.GetAll();
+            var items = await _itemRepository.GetAllAsync();
             return items.Select(i => new ItemDTO
             {
                 Id = i.Id, 
@@ -26,13 +27,13 @@ namespace Application.Services
                 Price = i.Price,
                 Stock = i.Stock,
                 Available = i.Available,
-                Description = i.Description,
+                Description = i.Description
             }).ToList();
         }
 
-        public ItemDTO? GetById(int id)
+        public async Task<ItemDTO?> GetByIdAsync(int id)
         {
-            var item = _itemRepository.GetById(id);
+            var item = await _itemRepository.GetByIdAsync(id);
 
             if (item == null) return null;
 
@@ -47,7 +48,20 @@ namespace Application.Services
             };
         }
 
-        public ItemDTO? Add(CreateItemDTO item)
+        public async Task<List<ItemDTO>> GetAvailableItemsAsync()
+        {
+            var availableItems = await _itemRepository.GetAvailableItemsAsync();
+            return availableItems.Select(i =>  new ItemDTO{
+                Id = i.Id, 
+                Name = i.Name,
+                Price = i.Price,
+                Stock = i.Stock,
+                Available = i.Available,
+                Description = i.Description
+            }).ToList();
+        }
+
+        public async Task<ItemDTO?> AddAsync(CreateItemDTO item)
         {
             if (item == null) return null;
             if(item.Stock < 0)
@@ -64,7 +78,8 @@ namespace Application.Services
                 Description = item.Description,
             };
 
-            var addedItem = _itemRepository.Add(newItem);
+            var addedItem = await _itemRepository.AddAsync(newItem);
+            if (addedItem == null) return null;
 
             return new ItemDTO
             {
@@ -77,9 +92,9 @@ namespace Application.Services
             };
         }
 
-        public ItemDTO? Update(ItemDTO item)
+        public async Task<ItemDTO?> UpdateAsync(ItemDTO item)
         {
-            var updateItem = _itemRepository.GetById(item.Id);
+            var updateItem = await _itemRepository.GetByIdAsync(item.Id);
 
             if (updateItem == null) return null;
 
@@ -89,7 +104,7 @@ namespace Application.Services
             updateItem.Available = item.Available;
             updateItem.Description = item.Description;
 
-            _itemRepository.Update(updateItem);
+            await _itemRepository.UpdateAsync(updateItem);
 
             return new ItemDTO
             {
@@ -102,13 +117,13 @@ namespace Application.Services
             };
         }
 
-        public ItemDTO? Delete(int id)
+        public async Task<ItemDTO?> DeleteAsync(int id)
         {
-            var item = _itemRepository.GetById(id);
+            var item = await _itemRepository.GetByIdAsync(id);
 
             if (item == null) return null;
 
-            _itemRepository.Delete(id);
+            await _itemRepository.DeleteAsync(id);
 
             return new ItemDTO
             {   
