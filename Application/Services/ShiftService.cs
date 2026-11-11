@@ -61,8 +61,6 @@ namespace Application.Services
         {
             if (shift == null || shiftEvent == null) return null;
 
-            var now = DateTime.Now;
-
             var newShift = new Shift
             {
                 PetId = shift.PetId,
@@ -71,14 +69,14 @@ namespace Application.Services
                 ServiceId = shift.ServiceId,
                 Status = ShiftStatus.Pendiente,
                 ClientObs = shift.ClientObs,
-                InitialDate = now,
+                InitialDate = shift.InitialDate,
                 EndDate = null
             };
 
             var addedShift = await _shiftRepository.AddAsync(newShift);
             await _shiftRepository.SaveChangesAsync();
 
-            if (addedShift == null) return null;
+            if (addedShift == null || addedShift.Id == 0) return null;
 
             var newShiftEvent = new ShiftEvent
             {
@@ -89,14 +87,14 @@ namespace Application.Services
                 NewVeterinaryId = shiftEvent.NewVeterinaryId,
                 OldVeterinaryId = shiftEvent.OldVeterinaryId,
                 Type = TypeShiftEvent.Creacion,
-                Date = now
+                Date = DateTime.Now
             };
 
-            var addedShiftEvent = await _shiftEventRepository.AddAsync(newShiftEvent);
-            await _shiftEventRepository.SaveChangesAsync();
-            if (addedShiftEvent == null) return null;
 
-            var newShiftDTO = new ShiftDTO
+            await _shiftEventRepository.AddAsync(newShiftEvent);
+            await _shiftEventRepository.SaveChangesAsync();
+
+            return new ShiftDTO
             {
                 Id = addedShift.Id,
                 PetId = addedShift.PetId,
@@ -108,7 +106,6 @@ namespace Application.Services
                 InitialDate = addedShift.InitialDate,
                 EndDate = addedShift.EndDate
             };
-            return newShiftDTO;
         }
 
         // se añade la auditoria por medio de la actualización del turno
@@ -126,6 +123,7 @@ namespace Application.Services
             updateShift.Status = shift.Status;
             updateShift.ClientObs = shift.ClientObs;
             updateShift.InitialDate = shift.InitialDate;
+            updateShift.EndDate = shift.EndDate;
 
             await _shiftRepository.UpdateAsync(updateShift);
             await _shiftRepository.SaveChangesAsync();

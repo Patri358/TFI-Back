@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
         {
             if (shiftEvent == null) return null;
 
-            _context.ShiftEvents.Add(shiftEvent);
+            await _context.ShiftEvents.AddAsync(shiftEvent);
             return shiftEvent;
         }
         public async Task SaveChangesAsync()
