@@ -15,26 +15,42 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ClinicalRecordDTO>> Get()
+        public async Task<ActionResult<List<ClinicalRecordDTO>>> Get()
         {
-            var clinicalRecords = _clinicalRecordService.GetAll();
+            var clinicalRecords = await _clinicalRecordService.GetAllAsync();
             return Ok(clinicalRecords);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ClinicalRecordDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<ClinicalRecordDTO>> GetById([FromRoute] int id)
         {
-            var clinicalRecord = _clinicalRecordService.GetById(id);
-            if (clinicalRecord == null) return NotFound("El registro clínico no existe");
+            var clinicalRecord = await _clinicalRecordService.GetByIdAsync(id);
+            if (clinicalRecord == null) 
+                return NotFound("El registro clínico no existe");
 
             return Ok(clinicalRecord);
         }
 
-        [HttpPost]
-        public ActionResult<ClinicalRecordDTO> Add([FromBody] CreateClinicalRecordDTO clinicalRecord)
+        [HttpGet("pet/{petId}")]
+        public async Task<ActionResult<List<ClinicalRecordDTO>>> GetByPetIdAsync([FromRoute] int petId)
         {
-            var createdClinicalRecord = _clinicalRecordService.Add(clinicalRecord);
-            if (createdClinicalRecord == null) return BadRequest("El registro clínico no pudo ser creado");
+            var clinicalRecords = await _clinicalRecordService.GetByPetIdAsync(petId);
+            return Ok(clinicalRecords);
+        }
+
+        [HttpGet("veterinary/{veterinaryId}")]
+        public async Task<ActionResult<List<ClinicalRecordDTO>>> GetByVeterinaryIdAsync([FromRoute] int veterinaryId)
+        {
+            var clinicalRecords = await _clinicalRecordService.GetByVeterinaryIdAsync(veterinaryId);
+            return Ok(clinicalRecords);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ClinicalRecordDTO>> Add([FromBody] CreateClinicalRecordDTO clinicalRecord)
+        {
+            var createdClinicalRecord = await _clinicalRecordService.AddAsync(clinicalRecord);
+            if (createdClinicalRecord == null) return 
+                    BadRequest("El registro clínico no pudo ser creado");
 
             return CreatedAtAction(
             actionName: nameof(GetById),
@@ -44,22 +60,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ClinicalRecordDTO> Update([FromBody] ClinicalRecordDTO clinicalRecord, [FromRoute] int id)
+        public async Task<ActionResult<ClinicalRecordDTO>> Update([FromBody] ClinicalRecordDTO clinicalRecord, [FromRoute] int id)
         {
-            if (clinicalRecord == null) return BadRequest("Los datos del registro clínico están incompletos");
-            if (clinicalRecord.Id != id) return BadRequest("El Id de la ruta no coincide con el del registro clínico");
+            if (clinicalRecord == null) 
+                return BadRequest("Los datos del registro clínico están incompletos");
+            if (clinicalRecord.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el del registro clínico");
 
-            var updateClinicalRecord = _clinicalRecordService.Update(clinicalRecord);
-            if (updateClinicalRecord == null) return NotFound($"El registro clínico con el Id:{clinicalRecord.Id} no pudo ser actualizado");
+            var updateClinicalRecord = await _clinicalRecordService.UpdateAsync(clinicalRecord);
+            if (updateClinicalRecord == null) 
+                return NotFound($"El registro clínico con el Id:{clinicalRecord.Id} no pudo ser actualizado");
 
             return Ok(updateClinicalRecord);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ClinicalRecordDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<ClinicalRecordDTO>> Delete([FromRoute] int id)
         {
-            var clinicalRecord = _clinicalRecordService.Delete(id);
-            if (clinicalRecord == null) return NotFound("El registro clínico no existe");
+            var clinicalRecord = await _clinicalRecordService.DeleteAsync(id);
+            if (clinicalRecord == null)
+                return NotFound("El registro clínico no existe");
             
             return Ok(clinicalRecord);
         }

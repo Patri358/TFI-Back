@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -16,38 +17,58 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<ClinicalRecord> GetAll()
+        public async Task<List<ClinicalRecord>> GetAllAsync()
         {
-            return _context.ClinicalRecords.ToList();
+            return await _context.ClinicalRecords.ToListAsync();
         }
 
-        public ClinicalRecord? GetById(int id)
+        public async Task<ClinicalRecord?> GetByIdAsync(int id)
         {
-            var clinicalRecord = _context.ClinicalRecords.FirstOrDefault(cr => cr.Id == id);
+            var clinicalRecord = await _context.ClinicalRecords.FirstOrDefaultAsync(cr => cr.Id == id);
             if (clinicalRecord == null) return null;
 
             return clinicalRecord;
         }
 
-        public ClinicalRecord Add(ClinicalRecord clinicalRecord)
+        public async Task<List<ClinicalRecord>> GetByPetIdAsync(int petId)
         {
-            _context.ClinicalRecords.Add(clinicalRecord);
+            return await _context.ClinicalRecords
+                .Where(cr => cr.PetId == petId)
+                .ToListAsync();
+        }
+        public async Task<List<ClinicalRecord>> GetByVeterinaryIdAsync(int veterinaryId)
+        {
+            return await _context.ClinicalRecords
+                .Where(cr => cr.VeterinaryId == veterinaryId)
+                .ToListAsync();
+        }
+
+        public async Task<ClinicalRecord?> AddAsync(ClinicalRecord clinicalRecord)
+        {
+            await _context.ClinicalRecords.AddAsync(clinicalRecord);
             return clinicalRecord;
         }
 
-        public ClinicalRecord Update(ClinicalRecord clinicalRecord)
+        public async Task<ClinicalRecord?> UpdateAsync(ClinicalRecord clinicalRecord)
         {
+            if (clinicalRecord == null) return null;
+
             _context.ClinicalRecords.Update(clinicalRecord);
             return clinicalRecord;
         }
 
-        public ClinicalRecord? Delete(int id)
+        public async Task<ClinicalRecord?> DeleteAsync(int id)
         {
-            var clinicalRecord = GetById(id);
+            var clinicalRecord = await GetByIdAsync(id);
             if (clinicalRecord == null) return null;
 
             _context.ClinicalRecords.Remove(clinicalRecord);
             return clinicalRecord;
+        }
+ 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

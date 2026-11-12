@@ -15,10 +15,9 @@ namespace Application.Services
             _clinicalRecordRepository = clinicalRecordRepository;
         }
 
-        public List<ClinicalRecordDTO> GetAll()
+        public async Task<List<ClinicalRecordDTO>> GetAllAsync()
         {
-            var clinicalRecords = _clinicalRecordRepository.GetAll();
-
+            var clinicalRecords = await _clinicalRecordRepository.GetAllAsync();
             return clinicalRecords.Select(cr => new ClinicalRecordDTO
             {
                 Id = cr.Id,
@@ -33,9 +32,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public ClinicalRecordDTO? GetById(int id)
+        public async Task<ClinicalRecordDTO?> GetByIdAsync(int id)
         {
-            var clinicalRecord = _clinicalRecordRepository.GetById(id);
+            var clinicalRecord = await _clinicalRecordRepository.GetByIdAsync(id);
 
             if (clinicalRecord == null) return null;
 
@@ -53,7 +52,41 @@ namespace Application.Services
             };
         }
 
-        public ClinicalRecordDTO? Add(CreateClinicalRecordDTO clinicalRecord)
+        public async Task<List<ClinicalRecordDTO>> GetByPetIdAsync(int petId)
+        {
+            var clinicalRecords = await _clinicalRecordRepository.GetByPetIdAsync(petId);
+            return clinicalRecords.Select(cr => new ClinicalRecordDTO
+            {
+                Id = cr.Id,
+                VeterinaryId = cr.VeterinaryId,
+                PetId = cr.PetId,
+                ShiftId = cr.ShiftId,
+                RecordType = cr.RecordType,
+                Observation = cr.Observation,
+                Treatment = cr.Treatment,
+                RegisterDate = cr.RegisterDate,
+                Diagnostic = cr.Diagnostic
+            }).ToList();
+        }
+
+        public async Task<List<ClinicalRecordDTO>> GetByVeterinaryIdAsync(int veterinaryId)
+        {
+            var clinicalRecords = await _clinicalRecordRepository.GetByVeterinaryIdAsync(veterinaryId);
+            return clinicalRecords.Select(cr => new ClinicalRecordDTO
+            {
+                Id = cr.Id,
+                VeterinaryId = cr.VeterinaryId,
+                PetId = cr.PetId,
+                ShiftId = cr.ShiftId,
+                RecordType = cr.RecordType,
+                Observation = cr.Observation,
+                Treatment = cr.Treatment,
+                RegisterDate = cr.RegisterDate,
+                Diagnostic = cr.Diagnostic
+            }).ToList();
+        }
+
+        public async Task<ClinicalRecordDTO?> AddAsync(CreateClinicalRecordDTO clinicalRecord)
         {
             var newClinicalRecord = new ClinicalRecord
             {
@@ -67,7 +100,11 @@ namespace Application.Services
                 Diagnostic = clinicalRecord.Diagnostic
             };
 
-            var addedClinicalRecord = _clinicalRecordRepository.Add(newClinicalRecord);
+            var addedClinicalRecord = await _clinicalRecordRepository.AddAsync(newClinicalRecord);
+            await _clinicalRecordRepository.SaveChangesAsync();
+
+            if (addedClinicalRecord == null || addedClinicalRecord.Id == 0) 
+                return null;
 
             return new ClinicalRecordDTO
             {
@@ -83,9 +120,9 @@ namespace Application.Services
             };
         }
 
-        public ClinicalRecordDTO? Update(ClinicalRecordDTO clinicalRecord)
+        public async Task<ClinicalRecordDTO?> UpdateAsync(ClinicalRecordDTO clinicalRecord)
         {
-            var updateClinicalRecord = _clinicalRecordRepository.GetById(clinicalRecord.Id);
+            var updateClinicalRecord = await _clinicalRecordRepository.GetByIdAsync(clinicalRecord.Id);
 
             if (updateClinicalRecord == null) return null;
 
@@ -97,7 +134,8 @@ namespace Application.Services
             updateClinicalRecord.Treatment = clinicalRecord.Treatment;
             updateClinicalRecord.Diagnostic = clinicalRecord.Diagnostic;
 
-            _clinicalRecordRepository.Update(updateClinicalRecord);
+            await _clinicalRecordRepository.UpdateAsync(updateClinicalRecord);
+            await _clinicalRecordRepository.SaveChangesAsync();
 
             return new ClinicalRecordDTO
             {
@@ -113,13 +151,13 @@ namespace Application.Services
             };
         }
 
-        public ClinicalRecordDTO? Delete(int id)
+        public async Task<ClinicalRecordDTO?> DeleteAsync(int id)
         {
-            var clinicalRecord = _clinicalRecordRepository.GetById(id);
-
+            var clinicalRecord = await _clinicalRecordRepository.GetByIdAsync(id);
             if (clinicalRecord == null) return null;
 
-            _clinicalRecordRepository.Delete(id);
+            await _clinicalRecordRepository.DeleteAsync(id);
+            await _clinicalRecordRepository.SaveChangesAsync();
 
             return new ClinicalRecordDTO
             {
