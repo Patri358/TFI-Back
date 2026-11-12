@@ -3,9 +3,10 @@ using Application.Models.Chat;
 using Application.Models.Message;
 using Domain.Entities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -17,9 +18,9 @@ namespace Application.Services
             _chatRepository = chatRepository;
         }
 
-        public List<ChatDTO> GetAll()
+        public async Task<List<ChatDTO>> GetAllAsync()
         {
-            var chats = _chatRepository.GetAll();
+            var chats = await _chatRepository.GetAllAsync();
             return chats.Select(c => new ChatDTO
             {
                 Id = c.Id,
@@ -37,9 +38,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public ChatDTO? GetById(int id)
+        public async Task<ChatDTO?> GetByIdAsync(int id)
         {
-            var chat = _chatRepository.GetById(id);
+            var chat = await _chatRepository.GetByIdAsync(id);
 
             if (chat == null) return null;
 
@@ -60,7 +61,47 @@ namespace Application.Services
             };
         }
 
-        public ChatDTO? Add(CreateChatDTO chat)
+        public async Task<List<ChatDTO>> GetByClientIdAsync(int clientId)
+        {
+            var chats = await _chatRepository.GetByClientIdAsync(clientId);
+            return chats.Select(c => new ChatDTO
+            {
+                Id = c.Id,
+                ClientId = c.ClientId,
+                ReceptionistId = c.ReceptionistId,
+                Status = c.Status,
+                CreationDate = c.CreationDate,
+                Messages = c.Messages.Select(m => new MessageDTO
+                {
+                    Id = m.Id,
+                    ChatId = m.ChatId,
+                    SendHour = m.SendHour,
+                    Text = m.Text
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<List<ChatDTO>> GetByRecepcionistIdAsync(int receptionistId)
+        {
+            var chats = await _chatRepository.GetByRecepcionistIdAsync(receptionistId);
+            return chats.Select(c => new ChatDTO
+            {
+                Id = c.Id,
+                ClientId = c.ClientId,
+                ReceptionistId = c.ReceptionistId,
+                Status = c.Status,
+                CreationDate = c.CreationDate,
+                Messages = c.Messages.Select(m => new MessageDTO
+                {
+                    Id = m.Id,
+                    ChatId = m.ChatId,
+                    SendHour = m.SendHour,
+                    Text = m.Text
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<ChatDTO?> AddAsync(CreateChatDTO chat)
         {
             if (chat == null) return null;
 
@@ -73,7 +114,9 @@ namespace Application.Services
                 Messages = new List<Message>()
             };
 
-            var addedChat = _chatRepository.Add(newChat);
+            var addedChat = await _chatRepository.AddAsync(newChat);
+            if (addedChat == null || addedChat.Id == 0) return null;
+            await _chatRepository.SaveChangesAsync();
 
             return new ChatDTO
             {
@@ -86,10 +129,9 @@ namespace Application.Services
             };
         }
 
-        public ChatDTO? Update(ChatDTO chat)
+        public async Task<ChatDTO?> UpdateAsync(ChatDTO chat)
         {
-            var updateChat = _chatRepository.GetById(chat.Id);
-
+            var updateChat = await _chatRepository.GetByIdAsync(chat.Id);
             if (updateChat == null) return null;
 
             updateChat.ClientId = chat.ClientId;
@@ -101,7 +143,8 @@ namespace Application.Services
                 Text = m.Text,
             }).ToList();
 
-            _chatRepository.Update(updateChat);
+            await _chatRepository.UpdateAsync(updateChat);
+            await _chatRepository.SaveChangesAsync();
 
             var newChatDTO = new ChatDTO
             {
@@ -122,13 +165,13 @@ namespace Application.Services
             return newChatDTO;
         }
 
-        public ChatDTO? Delete(int id)
+        public async Task<ChatDTO?> DeleteAsync(int id)
         {
-            var chat = _chatRepository.GetById(id);
-
+            var chat = await _chatRepository.GetByIdAsync(id);
             if (chat == null) return null;
 
-            _chatRepository.Delete(id);
+            await _chatRepository.DeleteAsync(id);
+            await _chatRepository.SaveChangesAsync();
 
             return new ChatDTO
             {

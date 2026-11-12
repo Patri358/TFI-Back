@@ -16,41 +16,62 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Chat> GetAll()
+        public async Task<List<Chat>> GetAllAsync()
         {
-            return _context.Chats
+            return await _context.Chats
                 .Include(c => c.Messages)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Chat? GetById(int id)
+        public async Task <Chat?> GetByIdAsync(int id)
         {
-            var chat = _context.Chats
+            return await _context.Chats
                 .Include(c => c.Messages)
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+        
+        public async Task<List<Chat>> GetByClientIdAsync(int clientId)
+        {
+            return await _context.Chats
+                .Include(c => c.Messages)
+                .Where(c => c.ClientId == clientId)
+                .ToListAsync();
+        }
 
+        public async Task<List<Chat>> GetByRecepcionistIdAsync(int receptionistId)
+        {
+            return await _context.Chats
+                .Include(c => c.Messages)
+                .Where(c => c.ReceptionistId == receptionistId)
+                .ToListAsync();
+        }
+
+        public async Task<Chat?> AddAsync(Chat chat)
+        {
+            await _context.Chats.AddAsync(chat);
             return chat;
         }
 
-        public Chat Add(Chat chat)
+        public async Task<Chat?> UpdateAsync(Chat chat)
         {
-            _context.Chats.Add(chat);
-            return chat;
-        }
+            if (chat == null) return null;
 
-        public Chat Update(Chat chat)
-        {
             _context.Chats.Update(chat);
             return chat;
         }
 
-        public Chat? Delete(int id)
+        public async Task<Chat?> DeleteAsync(int id)
         {
-            var chat = GetById(id);
+            var chat = await GetByIdAsync(id);
             if (chat == null) return null;
 
             _context.Chats.Remove(chat);
             return chat;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

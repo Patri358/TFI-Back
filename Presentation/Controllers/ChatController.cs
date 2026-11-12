@@ -16,26 +16,42 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ChatDTO>> Get()
+        public async Task<ActionResult<List<ChatDTO>>> Get()
         {
-            var chats = _chatService.GetAll();
+            var chats = await _chatService.GetAllAsync();
             return Ok(chats);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ChatDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<ChatDTO>> GetById([FromRoute] int id)
         {
-            var chat = _chatService.GetById(id);
-            if (chat == null) return NotFound($"Chat con el id {id} no existe");
+            var chat = await _chatService.GetByIdAsync(id);
+            if (chat == null) 
+                return NotFound($"Chat con el id {id} no existe");
             
             return Ok(chat);
         }
 
-        [HttpPost]
-        public ActionResult<ChatDTO> Add([FromBody] CreateChatDTO chat)
+        [HttpGet("client/{clientId}")]
+        public async Task<ActionResult<List<ChatDTO>>> GetByClientId([FromRoute] int clientId)
         {
-            var createdChat = _chatService.Add(chat);
-            if (createdChat == null) return BadRequest("No se pudo crear el chat");
+            var chats = await _chatService.GetByClientIdAsync(clientId);
+            return Ok(chats);
+        }
+
+        [HttpGet("recepcionist/{recepcionistId}")]
+        public async Task<ActionResult<List<ChatDTO>>> GetByRecepcionistIdAsync([FromRoute] int recepcionistId)
+        {
+            var chats = await _chatService.GetByRecepcionistIdAsync(recepcionistId);
+            return Ok(chats);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ChatDTO>> Add([FromBody] CreateChatDTO chat)
+        {
+            var createdChat = await _chatService.AddAsync(chat);
+            if (createdChat == null) return 
+                    BadRequest("No se pudo crear el chat");
 
             // codigo 201
             return CreatedAtAction(
@@ -46,22 +62,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ChatDTO> Update([FromBody] ChatDTO chat, [FromRoute] int id)
+        public async Task<ActionResult<ChatDTO>> Update([FromBody] ChatDTO chat, [FromRoute] int id)
         {
-            if (chat == null) return BadRequest("Los datos del chat están incompletos");
-            if (chat.Id != id) return BadRequest("El Id de la ruta no coincide con el del chat");
+            if (chat == null) 
+                return BadRequest("Los datos del chat están incompletos");
+            if (chat.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el del chat");
 
-            var updateChat = _chatService.Update(chat);
-            if (updateChat == null) return NotFound($"El chat con el Id:{id} no pudo ser actualizado");
+            var updateChat = await _chatService.UpdateAsync(chat);
+            if (updateChat == null) 
+                return NotFound($"El chat con el Id:{id} no pudo ser actualizado");
 
             return Ok(updateChat);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ChatDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<ChatDTO>> Delete([FromRoute] int id)
         {
-            var chat = _chatService.Delete(id);
-            if (chat == null) return NotFound("El chat no existe");
+            var chat = await _chatService.DeleteAsync(id);
+            if (chat == null)
+                return NotFound("El chat no existe");
 
             return Ok(chat);
         }

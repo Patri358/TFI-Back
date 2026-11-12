@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Session>> GetAllAsync()
         {
-            var sessions = _context.Sessions.ToListAsync();
+            var sessions = _context.Sessions.ToList();
             return sessions;
         }
 
