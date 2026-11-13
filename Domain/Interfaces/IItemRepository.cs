@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IItemRepository : IRepository<Item>
     {
-        Task<IEnumerable<Item>> GetAvailableItemsAsync();
+        //Task<IEnumerable<Item>> GetAvailableItemsAsync();
     }
 }

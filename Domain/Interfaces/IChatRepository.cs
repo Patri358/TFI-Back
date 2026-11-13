@@ -8,7 +8,7 @@ namespace Application.Interfaces
 {
     public interface IChatRepository : IRepository<Chat>
     {
-        Task<IEnumerable<Chat>> GetByClientIdAsync(int clientId);
-        Task<IEnumerable<Chat>> GetByRecepcionistIdAsync(int recepcionistId);
+        //Task<IEnumerable<Chat>> GetByClientIdAsync(int clientId);
+        //Task<IEnumerable<Chat>> GetByRecepcionistIdAsync(int recepcionistId);
     }
 }

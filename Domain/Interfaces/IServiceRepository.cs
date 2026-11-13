@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IServiceRepository : IRepository<Service>
     {
-        Task<IEnumerable<Service>> GetByTitleAsync(string title);
+        //Task<IEnumerable<Service>> GetByTitleAsync(string title);
     }
 }

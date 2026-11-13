@@ -8,8 +8,16 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
-        public int RecepcionistId { get; set; }
-        public string State { get; set; } = string.Empty;
+        public int ReceptionistId { get; set; }
+        public ChatStatus Status { get; set; }
         public DateTime CreationDate { get; set; }
+
+        public ICollection<Message> Messages { get; set; } = new List<Message>(); 
+    }
+
+    public enum ChatStatus
+    {
+        Activo,
+        Finalizado
     }
 }

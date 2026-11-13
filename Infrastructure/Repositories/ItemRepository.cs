@@ -1,0 +1,51 @@
+﻿using Infrastructure.Persistence;
+using Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Domain.Interfaces;
+using Application.Interfaces;
+
+namespace Infrastructure.Repositories
+{
+    public class ItemRepository : IItemRepository
+    {
+        private readonly ApplicationDbContext _context;
+        public ItemRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+        public List<Item> GetAll()
+        {
+            return _context.Items.ToList();
+        }
+
+        public Item? GetById(int id)
+        {
+            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+            if (item == null) return null;
+            return item;
+        }
+
+        public Item Add(Item item)
+        {
+            _context.Items.Add(item);
+            return item;
+        }
+
+        public Item Update(Item item)
+        {
+            _context.Items.Update(item);
+            return item;
+        }
+
+        public Item? Delete(int id)
+        {
+            var item = GetById(id);
+            if(item == null) return null;
+
+            _context.Items.Remove(item);
+            return item;
+        }
+    }
+}

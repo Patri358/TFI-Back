@@ -8,7 +8,7 @@ namespace Application.Interfaces
 {
     public interface IOrderRepository : IRepository<Order>
     {
-        Task<IEnumerable<Order>> GetByClientIdAsync(int clientId);
-        Task<IEnumerable<Order>> GetByStateAsync(string state);
+        //Task<IEnumerable<Order>> GetByClientIdAsync(int clientId);
+        //Task<IEnumerable<Order>> GetByStateAsync(string state);
     }
 }

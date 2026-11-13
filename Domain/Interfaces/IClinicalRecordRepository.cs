@@ -8,7 +8,7 @@ namespace Application.Interfaces
 {
     public interface IClinicalRecordRepository : IRepository<ClinicalRecord>
     {
-        Task<IEnumerable<ClinicalRecord>> GetByPetIdAsync(int petId);
-        Task<IEnumerable<ClinicalRecord>> GetByVeterinaryIdAsync(int veterinaryId);
+        //Task<IEnumerable<ClinicalRecord>> GetByPetIdAsync(int petId);
+        //Task<IEnumerable<ClinicalRecord>> GetByVeterinaryIdAsync(int veterinaryId);
     }
 }
