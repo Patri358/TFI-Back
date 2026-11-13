@@ -15,26 +15,35 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult <List<ServiceDTO>> Get()
+        public async Task<ActionResult<List<ServiceDTO>>> Get()
         {
-            var services = _serviceService.GetAll();
-            return Ok();
+            var services = await _serviceService.GetAllAsync();
+            return Ok(services);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ServiceDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<ServiceDTO>> GetById([FromRoute] int id)
         {
-            var service = _serviceService.GetById(id);
-            if (service == null) return NotFound($"No se encontró el servicio con Id:{id}");
+            var service = await _serviceService.GetByIdAsync(id);
+            if (service == null) 
+                return NotFound($"No se encontró el servicio con Id:{id}");
 
             return Ok(service);
         }
 
-        [HttpPost]
-        public ActionResult<ServiceDTO> Add([FromBody] CreateServiceDTO service)
+        [HttpGet("title/{title}")]
+        public async Task<ActionResult<List<ServiceDTO>>> GetByTitleAsync([FromRoute] string title)
         {
-            var createdService = _serviceService.Add(service);
-            if (createdService == null) return BadRequest("No se pudo crear el servicio");
+            var services = await _serviceService.GetByTitleAsync(title);
+            return Ok(services);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceDTO>> Add([FromBody] CreateServiceDTO service)
+        {
+            var createdService = await _serviceService.AddAsync(service);
+            if (createdService == null) 
+                return BadRequest("No se pudo crear el servicio");
 
             return CreatedAtAction(
                 actionName: nameof(GetById),
@@ -44,22 +53,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ServiceDTO> Update([FromBody] ServiceDTO service, [FromRoute] int id)
+        public async Task<ActionResult<ServiceDTO>> Update([FromBody] ServiceDTO service, [FromRoute] int id)
         {
-            if (service == null) return BadRequest("Los datos del servicio están incompletos");
-            if (service.Id != id) return BadRequest("El Id de la ruta no coincide con el del servicio");
+            if (service == null) 
+                return BadRequest("Los datos del servicio están incompletos");
+            if (service.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el del servicio");
 
-            var updatedService = _serviceService.Update(service);
-            if (updatedService == null) return NotFound($"No se pudo actualizar el servicio con Id:{service.Id}");
+            var updatedService = await _serviceService.UpdateAsync(service);
+            if (updatedService == null) 
+                return NotFound($"No se pudo actualizar el servicio con Id:{service.Id}");
 
             return Ok(updatedService);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ServiceDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<ServiceDTO>> Delete([FromRoute] int id)
         {
-            var service = _serviceService.Delete(id);
-            if (service == null) return NotFound($"El servicio con Id:{id} no pudo ser eliminado");
+            var service = await _serviceService.DeleteAsync(id);
+            if (service == null) 
+                return NotFound($"El servicio con Id:{id} no pudo ser eliminado");
 
             return Ok(service);
         }

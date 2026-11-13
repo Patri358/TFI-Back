@@ -15,9 +15,9 @@ namespace Application.Services
             _serviceRepository = serviceRepository;
         }
 
-        public List<ServiceDTO> GetAll()
+        public async Task<List<ServiceDTO>> GetAllAsync()
         {
-            var services = _serviceRepository.GetAll();
+            var services = await _serviceRepository.GetAllAsync();
             return services.Select(s => new ServiceDTO
             {
                 Id = s.Id,
@@ -28,10 +28,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public ServiceDTO? GetById(int id)
+        public async Task<ServiceDTO?> GetByIdAsync(int id)
         {
-            var service = _serviceRepository.GetById(id);
-
+            var service = await _serviceRepository.GetByIdAsync(id);
             if (service == null) return null;
 
             return new ServiceDTO
@@ -44,7 +43,20 @@ namespace Application.Services
             };
         }
 
-        public ServiceDTO? Add(CreateServiceDTO service)
+        public async Task<List<ServiceDTO>> GetByTitleAsync(string title)
+        {
+            var services = await _serviceRepository.GetByTitleAsync(title);
+            return services.Select(s => new ServiceDTO
+            {
+                Id = s.Id,
+                Title = s.Title,
+                Description = s.Description,
+                Price = s.Price,
+                Duration = s.Duration
+            }).ToList();
+        }
+
+        public async Task<ServiceDTO?> AddAsync(CreateServiceDTO service)
         {
             if (service == null) return null;
 
@@ -56,7 +68,10 @@ namespace Application.Services
                 Duration = service.Duration
             };
 
-            var addedService = _serviceRepository.Add(newService);
+            var addedService = await _serviceRepository.AddAsync(newService);
+            await _serviceRepository.SaveChangesAsync();
+            if (addedService == null || addedService.Id == 0)
+                return null;
 
             return new ServiceDTO
             {
@@ -68,10 +83,9 @@ namespace Application.Services
             };
         }
 
-        public ServiceDTO? Update(ServiceDTO service)
+        public async Task<ServiceDTO?> UpdateAsync(ServiceDTO service)
         {
-            var updateService = _serviceRepository.GetById(service.Id);
-
+            var updateService = await _serviceRepository.GetByIdAsync(service.Id);
             if (updateService == null) return null;
 
             updateService.Title = service.Title;
@@ -79,7 +93,8 @@ namespace Application.Services
             updateService.Price = service.Price;
             updateService.Duration = service.Duration;
 
-            _serviceRepository.Update(updateService);
+            await _serviceRepository.UpdateAsync(updateService);
+            await _serviceRepository.SaveChangesAsync();
 
             return new ServiceDTO
             {
@@ -91,13 +106,13 @@ namespace Application.Services
             };
         }
 
-        public ServiceDTO? Delete(int id)
+        public async Task<ServiceDTO?> DeleteAsync(int id)
         {
-            var service = _serviceRepository.GetById(id);
-
+            var service = await _serviceRepository.GetByIdAsync(id);
             if (service == null) return null;
 
-            _serviceRepository.Delete(id);
+            await _serviceRepository.DeleteAsync(id);
+            await _serviceRepository.SaveChangesAsync();
 
             return new ServiceDTO
             {

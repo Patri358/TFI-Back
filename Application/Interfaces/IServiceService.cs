@@ -7,10 +7,11 @@ namespace Application.Interfaces
 {
     public interface IServiceService
     {
-        public List<ServiceDTO> GetAll();
-        public ServiceDTO? GetById(int id);
-        public ServiceDTO? Add(CreateServiceDTO service);
-        public ServiceDTO? Update(ServiceDTO service);
-        public ServiceDTO? Delete(int id);
+        Task<List<ServiceDTO>> GetAllAsync();
+        Task<ServiceDTO?> GetByIdAsync(int id);
+        Task<List<ServiceDTO>> GetByTitleAsync(string title);
+        Task<ServiceDTO?> AddAsync(CreateServiceDTO service);
+        Task<ServiceDTO?> UpdateAsync(ServiceDTO service);
+        Task<ServiceDTO?> DeleteAsync(int id);
     }
 }

@@ -10,8 +10,8 @@ namespace Application.Interfaces
     {
         Task<List<RatingDTO>> GetAllAsync();
         Task<RatingDTO?> GetByIdAsync(int id);
-        Task<List<Rating>> GetByClientIdAsync(int clientId);
-        Task<List<Rating>> GetByShiftIdAsync(int shiftId);
+        Task<List<RatingDTO>> GetByClientIdAsync(int clientId);
+        Task<List<RatingDTO>> GetByShiftIdAsync(int shiftId);
         Task<RatingDTO?> AddAsync(CreateRatingDTO rating);
         Task<RatingDTO?> UpdateAsync(RatingDTO rating);
         Task<RatingDTO?> DeleteAsync(int id);
