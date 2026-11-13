@@ -16,9 +16,9 @@ namespace Application.Services
             _ratingRepository = ratingRepository;
         }
 
-        public List<RatingDTO> GetAll()
+        public async Task<List<RatingDTO>> GetAllAsync()
         {
-            var ratings = _ratingRepository.GetAll();
+            var ratings = await _ratingRepository.GetAllAsync();
             return ratings.Select(r => new RatingDTO
             {
                 Id = r.Id,
@@ -30,9 +30,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public RatingDTO? GetById(int id)
+        public async Task<RatingDTO?> GetByIdAsync(int id)
         {
-            var rating = _ratingRepository.GetById(id);
+            var rating = await _ratingRepository.GetByIdAsync(id);
             if (rating == null) return null;
 
             return new RatingDTO
@@ -46,7 +46,34 @@ namespace Application.Services
             };
         }
 
-        public RatingDTO? Add(CreateRatingDTO rating)
+        public async Task<List<RatingDTO>> GetByClientIdAsync(int clientId)
+        {
+            var ratings = await _ratingRepository.GetByClientIdAsync(clientId);
+            return ratings.Select(r => new RatingDTO
+            {
+                Id = r.Id,
+                ClientId = r.ClientId,
+                ShiftId = r.ShiftId,
+                Date = r.Date,
+                Description = r.Description,
+                Score = r.Score
+            }).ToList();
+        }
+        public async Task<List<RatingDTO>> GetByShiftIdAsync(int shiftId)
+        {
+            var ratings = await _ratingRepository.GetByShiftIdAsync(shiftId);
+            return ratings.Select(r => new RatingDTO
+            {
+                Id = r.Id,
+                ClientId = r.ClientId,
+                ShiftId = r.ShiftId,
+                Date = r.Date,
+                Description = r.Description,
+                Score = r.Score
+            }).ToList();
+        }
+
+        public async Task<RatingDTO?> AddAsync(CreateRatingDTO rating)
         {
             if(rating.Score < 1 || rating.Score > 5)
             {
@@ -62,7 +89,10 @@ namespace Application.Services
                 Score = rating.Score,
             };
 
-            var addedRating = _ratingRepository.Add(newRating);
+            var addedRating = await _ratingRepository.AddAsync(newRating);
+            await _ratingRepository.SaveChangesAsync();
+            if (addedRating == null || addedRating.Id == 0)
+                return null;
 
             return new RatingDTO
             {
@@ -75,9 +105,9 @@ namespace Application.Services
             };
         }
 
-        public RatingDTO? Update(RatingDTO rating)
+        public async Task<RatingDTO?> UpdateAsync(RatingDTO rating)
         {
-            var updateRating = _ratingRepository.GetById(rating.Id);
+            var updateRating = await _ratingRepository.GetByIdAsync(rating.Id);
 
             if (updateRating == null) return null;
             if(rating.Score < 1 || rating.Score > 5)
@@ -91,7 +121,8 @@ namespace Application.Services
             updateRating.Description = rating.Description;
             updateRating.Score = rating.Score;
 
-            _ratingRepository.Update(updateRating);
+            await _ratingRepository.UpdateAsync(updateRating);
+            await _ratingRepository.SaveChangesAsync();
 
             return new RatingDTO
             {
@@ -104,13 +135,13 @@ namespace Application.Services
             };
         }
 
-        public RatingDTO? Delete(int id)
+        public async Task<RatingDTO?> DeleteAsync(int id)
         {
-            var rating = _ratingRepository.GetById(id);
-
+            var rating = await _ratingRepository.GetByIdAsync(id);
             if (rating == null) return null;
 
-            _ratingRepository.Delete(id);
+            await _ratingRepository.DeleteAsync(id);
+            await _ratingRepository.SaveChangesAsync();
 
             return new RatingDTO
             {

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models.Rating;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -15,51 +16,71 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<RatingDTO>> Get()
+        public async Task<ActionResult<List<RatingDTO>>> Get()
         {
-            var ratings = _ratingService.GetAll();
+            var ratings = await _ratingService.GetAllAsync();
             return Ok(ratings);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<RatingDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<RatingDTO>> GetById([FromRoute] int id)
         {
-            var rating = _ratingService.GetById(id);
-            if (rating == null) return NotFound($"El rating con el Id: {id} no pudo ser encontrado");
+            var rating = await _ratingService.GetByIdAsync(id);
+            if (rating == null) 
+                return NotFound($"El rating con el Id: {id} no pudo ser encontrado");
 
             return Ok(rating);
         }
 
-        [HttpPost]
-        public ActionResult<RatingDTO> Add([FromBody] CreateRatingDTO rating)
+        [HttpGet("client/{clientId}")]
+        public async Task<ActionResult<List<RatingDTO>>> GetByClientIdAsync(int clientId)
         {
-            var createdRating = _ratingService.Add(rating);
-            if (createdRating == null) return BadRequest($"El rating del turno: {rating.ShiftId} no pudo ser creado");
+            var ratings = await _ratingService.GetByClientIdAsync(clientId);
+            return Ok(ratings);
+        }
+
+        [HttpGet("shift/{shiftId}")]
+        public async Task<ActionResult<List<RatingDTO>>> GetByShiftIdAsync(int shiftId)
+        {
+            var ratings = await _ratingService.GetByShiftIdAsync(shiftId);
+            return Ok(ratings);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<RatingDTO>> Add([FromBody] CreateRatingDTO rating)
+        {
+            var createdRating = await _ratingService.AddAsync(rating);
+            if (createdRating == null) 
+                return BadRequest($"El rating del turno: {rating.ShiftId} no pudo ser creado");
 
             return CreatedAtAction(
                 actionName: nameof(GetById),
-                routeValues: new {Id = createdRating.Id},
+                routeValues: new {id = createdRating.Id},
                 value: createdRating
             );
         }
 
         [HttpPut("{id}")]
-        public ActionResult<RatingDTO> Update([FromBody] RatingDTO rating, [FromRoute] int id)
+        public async Task<ActionResult<RatingDTO>> Update([FromBody] RatingDTO rating, [FromRoute] int id)
         {
-            if (rating == null) return BadRequest("Los datos del rating están incompletos");
-            if (rating.Id != id) return BadRequest("El Id de la ruta no coincide con el del rating");
+            if (rating == null) 
+                return BadRequest("Los datos del rating están incompletos");
+            if (rating.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el del rating");
 
-            var updatedRating = _ratingService.Update(rating);
-            if (updatedRating == null) return NotFound($"El rating con el Id: {rating.Id} no pudo ser actualizado");
+            var updatedRating = await _ratingService.UpdateAsync(rating);
+            if (updatedRating == null) 
+                return NotFound($"El rating con el Id: {rating.Id} no pudo ser actualizado");
 
             return Ok(updatedRating);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<RatingDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<RatingDTO>> Delete([FromRoute] int id)
         {
-            var rating = _ratingService.Delete(id);
-            if (rating == null) return NotFound($"El rating con el Id:{id} no pudo ser eliminado");
+            var rating = await _ratingService.DeleteAsync(id);
+            if (rating == null) 
+                return NotFound($"El rating con el Id:{id} no pudo ser eliminado");
 
             return Ok(rating);
         }
