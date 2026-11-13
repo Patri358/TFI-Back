@@ -18,42 +18,68 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAllAsync()
         {
-            return _context.Orders
+            return await _context.Orders
                 .Include(o => o.Items)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Order? GetById(int id)
+        public async Task<Order?> GetByIdAsync(int id)
         {
-            var order = _context.Orders
+            var order = await _context.Orders
                 .Include(o => o.Items)
-                .FirstOrDefault(o => o.Id == id);
-
+                .FirstOrDefaultAsync(o => o.Id == id);
             return order;
         }
 
-        public Order Add(Order order)
+        public async Task<List<Order>> GetByClientIdAsync(int clientId)
         {
-            _context.Orders.Add(order);
+            var orders = await _context.Orders
+                .Where(o => o.ClientId == clientId)
+                .Include(o => o.Items)
+                .ToListAsync();
+            return orders;
+        }
+
+        public async Task<List<Order>> GetByStateAsync(OrderStatus status)
+        {
+            var orders = await _context.Orders
+                .Where(o => o.Status == status)
+                .Include(o => o.Items)
+                .ToListAsync();
+            return orders;
+        }
+
+        public async Task<Order?> AddAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
             return order;
         }
 
-        public Order Update(Order order)
+        public async Task<Order?> UpdateAsync(Order order)
         {
+            if (order == null)
+                return null;
+            
             _context.Orders.Update(order);
             return order;
         }
 
-        public Order? Delete(int id)
+        public async Task<Order?> DeleteAsync(int id)
         {
-            var order = GetById(id);
-            if(order == null) return null;
+            var order = await GetByIdAsync(id);
+            if(order == null) 
+                return null;
 
             _context.Orders.Remove(order);
             return order;
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        } 
 
     }
 }

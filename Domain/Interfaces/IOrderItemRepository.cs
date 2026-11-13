@@ -6,8 +6,9 @@ using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IOrderItemRepository : IRepository<OrderItem>
+    public interface IOrderItemRepository
     {
-        Task<IEnumerable<OrderItem>> GetByOrderIdAsync(int orderId);
+        Task<List<OrderItem>> GetByOrderIdAsync(int orderId);
+        Task SaveChangesAsync();
     }
 }

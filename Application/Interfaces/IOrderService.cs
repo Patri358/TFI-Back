@@ -7,10 +7,10 @@ namespace Application.Interfaces
 {
     public interface IOrderService
     {
-        public List<OrderDTO> GetAll();
-        public OrderDTO? GetById(int id);
-        public OrderDTO? Add(CreateOrderDTO order);
-        public OrderDTO? Update(OrderDTO order);
-        public OrderDTO? Delete(int id);
+        Task<List<OrderDTO>> GetAllAsync();
+        Task<OrderDTO?> GetByIdAsync(int id);
+        Task<OrderDTO?> AddAsync(CreateOrderDTO order);
+        Task<OrderDTO?> UpdateAsync(OrderDTO order);
+        Task<OrderDTO?> DeleteAsync(int id);
     }
 }

@@ -4,6 +4,7 @@ using Application.Models.OrderItem;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -19,58 +20,21 @@ namespace Application.Services
             _itemRepository = itemRepository;
         }
 
-        public List<OrderDTO> GetAll()
+        public async Task<List<OrderDTO>> GetAllAsync()
         {
-            var orders = _orderRepository.GetAll();
-            return orders.Select(o => new OrderDTO
-            {
-                Id = o.Id,
-                ClientId = o.ClientId, 
-                OrderDate = o.OrderDate,
-                DeliveryDate = o.DeliveryDate,
-                PreparationDate = o.PreparationDate,
-                PaymentMethod = o.PaymentMethod,
-                Status = o.Status,
-                Total = o.Total,
-                Items = o.Items.Select(i => new OrderItemDTO
-                {
-                    Id = i.Id,
-                    OrderId = i.OrderId,
-                    ItemId = i.ItemId,
-                    Amount = i.Amount,
-                    UnitPrice = i.UnitPrice,
-                }).ToList()
-            }).ToList();
+            var orders = await _orderRepository.GetAllAsync();
+            return orders.Select(MapDTO).ToList();
         }
 
-        public OrderDTO? GetById(int id)
+        public async Task<OrderDTO?> GetByIdAsync(int id)
         {
-            var order = _orderRepository.GetById(id);
-
+            var order = await _orderRepository.GetByIdAsync(id);
             if (order == null) return null;
 
-            return new OrderDTO
-            {
-                Id = order.Id,
-                ClientId = order.ClientId,
-                OrderDate = order.OrderDate,
-                DeliveryDate = order.DeliveryDate,
-                PreparationDate = order.PreparationDate,
-                PaymentMethod = order.PaymentMethod,
-                Status = order.Status,
-                Total = order.Total,
-                Items = order.Items.Select(oi => new OrderItemDTO
-                {
-                    Id = oi.Id,
-                    OrderId = oi.OrderId,
-                    ItemId = oi.ItemId,
-                    Amount = oi.Amount,
-                    UnitPrice = oi.UnitPrice,
-                }).ToList()
-            };
+            return MapDTO(order);
         }
 
-        public OrderDTO? Add(CreateOrderDTO order)
+        public async Task<OrderDTO?> AddAsync(CreateOrderDTO order)
         {
             if (order == null || order.Items == null) return null;
 
@@ -80,7 +44,7 @@ namespace Application.Services
             decimal total = 0;
             foreach (var item in order.Items)
             {
-                var itemDB = _itemRepository.GetById(item.ItemId);
+                var itemDB = await _itemRepository.GetByIdAsync(item.ItemId);
                 if (itemDB == null)
                 {
                     throw new Exception($"El Item con el id: {item.ItemId} no existe");
@@ -90,6 +54,10 @@ namespace Application.Services
                 {
                     throw new Exception($"El stock del Item {itemDB.Name} no es suficiente, Stock {itemDB.Stock}");
                 }
+
+                // resto la cantidad del pedido al producto y guardo el stock restante
+                itemDB.Stock -= item.Amount;
+                await _itemRepository.UpdateAsync(itemDB);
 
                 // multiplico el precio del item de la base de datos por la cantidad solicitada y lo acumulo en el total
                 decimal subtotal = itemDB.Price * item.Amount;
@@ -102,6 +70,7 @@ namespace Application.Services
                     UnitPrice = itemDB.Price // precio del Item en la base de datos
                 });
             }
+            await _itemRepository.SaveChangesAsync();
 
             var newOrder = new Order
             {
@@ -115,36 +84,19 @@ namespace Application.Services
                 Items = orderItems
             };
 
-            var addedOrder = _orderRepository.Add(newOrder);
+            var addedOrder = await _orderRepository.AddAsync(newOrder);
+            await _orderRepository.SaveChangesAsync();
+            if (addedOrder == null || addedOrder.Id == 0)
+                return null;
 
-            return new OrderDTO
-            {
-                Id = addedOrder.Id,
-                ClientId = addedOrder.ClientId,
-                OrderDate = addedOrder.OrderDate,
-                DeliveryDate = addedOrder.DeliveryDate,
-                PreparationDate = addedOrder.PreparationDate,
-                PaymentMethod = addedOrder.PaymentMethod,
-                Status = addedOrder.Status,
-                Total = addedOrder.Total,
-                Items = addedOrder.Items.Select(i => new OrderItemDTO
-                {
-                    Id = i.Id,
-                    OrderId = i.OrderId,
-                    ItemId = i.ItemId,
-                    Amount = i.Amount,
-                    UnitPrice = i.UnitPrice
-                }).ToList()
-            };
+            return MapDTO(addedOrder);
         }
  
-        public OrderDTO? Update(OrderDTO order)
+        public async Task<OrderDTO?> UpdateAsync(OrderDTO order)
         {
-            var updateOrder = _orderRepository.GetById(order.Id);
-            
+            var updateOrder = await _orderRepository.GetByIdAsync(order.Id); 
             if(updateOrder == null) return null;
         
-            updateOrder.Id = order.Id;
             updateOrder.ClientId = order.ClientId;
             updateOrder.DeliveryDate = order.DeliveryDate;
             updateOrder.PreparationDate = order.PreparationDate;
@@ -154,60 +106,50 @@ namespace Application.Services
             updateOrder.Items = order.Items.Select(oi => new OrderItem
             {
                 Id = oi.Id,
-                OrderId = oi.Id,
+                OrderId = oi.OrderId,
                 ItemId = oi.ItemId,
                 Amount = oi.Amount,
                 UnitPrice = oi.UnitPrice
             }).ToList();
 
-            _orderRepository.Update(updateOrder);
+            await _orderRepository.UpdateAsync(updateOrder);
+            await _orderRepository.SaveChangesAsync();
 
-            return new OrderDTO
-            {
-                Id = updateOrder.Id,
-                ClientId = updateOrder.ClientId,
-                OrderDate = updateOrder.OrderDate,
-                DeliveryDate = updateOrder.DeliveryDate,
-                PreparationDate = updateOrder.PreparationDate,
-                PaymentMethod = updateOrder.PaymentMethod,
-                Status = updateOrder.Status,
-                Total = updateOrder.Total,
-                Items = updateOrder.Items.Select(oi => new OrderItemDTO
-                {
-                    Id = oi.Id,
-                    OrderId = oi.OrderId,
-                    ItemId = oi.ItemId,
-                    Amount= oi.Amount,
-                    UnitPrice = oi.UnitPrice
-                }).ToList()
-            };
+            return MapDTO(updateOrder);
         }
 
-        public OrderDTO? Delete(int id)
+        public async Task<OrderDTO?> DeleteAsync(int id)
         {
-            var order = _orderRepository.GetById(id);
+            var order = await _orderRepository.GetByIdAsync(id);
 
             if (order == null) return null;
 
-            _orderRepository.Delete(id);
+            await _orderRepository.DeleteAsync(id);
+            await _orderRepository.SaveChangesAsync();
 
+            return MapDTO(order);
+        }
+
+        // metodo para mapear a dto la orden
+        private static OrderDTO MapDTO(Order o)
+        {
             return new OrderDTO
             {
-                Id = order.Id,
-                ClientId = order.ClientId,
-                OrderDate = order.OrderDate,
-                DeliveryDate = order.DeliveryDate,
-                PreparationDate = order.PreparationDate,
-                PaymentMethod = order.PaymentMethod,
-                Status = order.Status,
-                Total = order.Total,
-                Items = order.Items.Select(oi => new OrderItemDTO
+                Id = o.Id,
+                ClientId = o.ClientId,
+                OrderDate = o.OrderDate,
+                DeliveryDate = o.DeliveryDate,
+                PreparationDate = o.PreparationDate,
+                PaymentMethod = o.PaymentMethod,
+                Status = o.Status,
+                Total = o.Total,
+                Items = o.Items.Select(oi => new OrderItemDTO
                 {
                     Id = oi.Id,
                     OrderId = oi.OrderId,
                     ItemId = oi.ItemId,
                     Amount = oi.Amount,
-                    UnitPrice = oi.UnitPrice
+                    UnitPrice = oi.UnitPrice,
                 }).ToList()
             };
         }
