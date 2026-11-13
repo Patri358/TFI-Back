@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Models.Pet;
 using Domain.Entities;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,9 +17,9 @@ namespace Application.Services
             _petRepository = petRepository;
         }
 
-        public List<PetDTO> GetAll()
+        public async Task<List<PetDTO>> GetAllAsync()
         {
-            var pets = _petRepository.GetAll();
+            var pets = await _petRepository.GetAllAsync();
 
             return pets.Select(p => new PetDTO
             {
@@ -32,10 +33,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public PetDTO? GetById(int id)
+        public async Task<PetDTO?> GetByIdAsync(int id)
         {
-            var pet = _petRepository.GetById(id);
-
+            var pet = await _petRepository.GetByIdAsync(id);
             if (pet == null) return null;
 
             return new PetDTO
@@ -50,25 +50,22 @@ namespace Application.Services
             };
         }
 
-        public PetDTO? GetByClientId(int clientId)
+        public async Task<List<PetDTO>> GetByClientIdAsync(int clientId)
         {
-            var pet = _petRepository.GetByClientId(clientId);
-
-            if (pet == null) return null;
-
-            return new PetDTO
+            var pets = await _petRepository.GetByClientIdAsync(clientId);
+            return pets.Select(p => new PetDTO
             {
-                Id = pet.Id,
-                ClientId = pet.ClientId,
-                Name = pet.Name,
-                Race = pet.Race,
-                Gender = pet.Gender,
-                Species = pet.Species,
-                BirthDate = pet.BirthDate,
-            };
+                Id = p.Id,
+                ClientId = p.ClientId,
+                Name = p.Name,
+                Race = p.Race,
+                Gender = p.Gender,
+                Species = p.Species,
+                BirthDate = p.BirthDate
+            }).ToList();
         }
 
-        public PetDTO Add(CreatePetDTO pet)
+        public async Task<PetDTO?> AddAsync(CreatePetDTO pet)
         {
             var newPet = new Pet
             {
@@ -80,9 +77,12 @@ namespace Application.Services
                 BirthDate = pet.BirthDate,
             };
 
-            var addedPet = _petRepository.Add(newPet);
+            var addedPet = await _petRepository.AddAsync(newPet);
+            await _petRepository.SaveChangesAsync();
+            if (addedPet == null || addedPet.Id == 0)
+                return null;
 
-            var newPetDTO = new PetDTO
+            return new PetDTO
             {
                 Id = addedPet.Id,
                 ClientId = addedPet.ClientId,
@@ -92,17 +92,13 @@ namespace Application.Services
                 Species = addedPet.Species,
                 BirthDate = addedPet.BirthDate,
             };
-
-            return newPetDTO;
         }
 
-        public PetDTO? Update(PetDTO pet)
+        public async Task<PetDTO?> UpdateAsync(PetDTO pet)
         {
-            var updatePet = _petRepository.GetById(pet.Id);
-
+            var updatePet = await _petRepository.GetByIdAsync(pet.Id);
             if (updatePet == null) return null;
-            
-            updatePet.Id = pet.Id;
+
             updatePet.ClientId = pet.ClientId;
             updatePet.Name = pet.Name;
             updatePet.Race = pet.Race;
@@ -110,7 +106,8 @@ namespace Application.Services
             updatePet.Species = pet.Species;
             updatePet.BirthDate = pet.BirthDate;
 
-            _petRepository.Update(updatePet);
+            await _petRepository.UpdateAsync(updatePet);
+            await _petRepository.SaveChangesAsync();
 
             return new PetDTO
             {
@@ -124,13 +121,13 @@ namespace Application.Services
             };
         }
 
-        public PetDTO? Delete(int id)
+        public async Task<PetDTO?> DeleteAsync(int id)
         {
-            var pet = _petRepository.GetById(id);
-
+            var pet = await _petRepository.GetByIdAsync(id);
             if(pet == null) return null;
 
-            _petRepository.Delete(id);
+            await _petRepository.DeleteAsync(id);
+            await _petRepository.SaveChangesAsync();
 
             return new PetDTO
             {

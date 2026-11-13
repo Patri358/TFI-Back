@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Pet;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -17,26 +16,28 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<PetDTO>> Get()
+        public async Task<ActionResult<List<PetDTO>>> Get()
         {
-            var pets = _petService.GetAll();
+            var pets = await _petService.GetAllAsync();
             return Ok(pets);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<PetDTO> GetById(int id)
+        public async Task<ActionResult<PetDTO>> GetById(int id)
         {
-            var pet = _petService.GetById(id);
-            if (pet == null) return NotFound($"No se encontró la mascota con el Id: {id}");
+            var pet = await _petService.GetByIdAsync(id);
+            if (pet == null) 
+                return NotFound($"No se encontró la mascota con el Id: {id}");
 
             return Ok(pet);
         }
 
         [HttpPost]
-        public ActionResult<PetDTO> Add([FromBody] CreatePetDTO pet)
+        public async Task <ActionResult<PetDTO>> Add([FromBody] CreatePetDTO pet)
         {
-            var createdPet = _petService.Add(pet);
-            if (createdPet == null) return BadRequest($"La mascota {pet.Name} no pudo ser creada");
+            var createdPet = await _petService.AddAsync(pet);
+            if (createdPet == null) 
+                return BadRequest($"La mascota {pet.Name} no pudo ser creada");
 
             return CreatedAtAction(
                 actionName: nameof(GetById),
@@ -46,22 +47,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<PetDTO> Update([FromBody] PetDTO pet, [FromRoute] int id)
+        public async Task<ActionResult<PetDTO>> Update([FromBody] PetDTO pet, [FromRoute] int id)
         {
-            if (pet == null) return BadRequest("Los datos de la mascota están incompletos");
-            if (pet.Id != id) return BadRequest("El Id de la ruta no coincide con el de la mascota");
+            if (pet == null) 
+                return BadRequest("Los datos de la mascota están incompletos");
+            if (pet.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el de la mascota");
 
-            var updatePet = _petService.Update(pet);
-            if (updatePet == null) return NotFound($"La mascota con el Id: {pet.Id} no pudo ser actualizada");
+            var updatePet = await _petService.UpdateAsync(pet);
+            if (updatePet == null) 
+                return NotFound($"La mascota con el Id: {pet.Id} no pudo ser actualizada");
 
             return Ok(updatePet);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<PetDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<PetDTO>> Delete([FromRoute] int id)
         {
-            var pet = _petService.Delete(id);
-            if (pet == null) return NotFound($"La mascota con el Id: {id} no pudo ser eliminada");
+            var pet = await _petService.DeleteAsync(id);
+            if (pet == null) 
+                return NotFound($"La mascota con el Id: {id} no pudo ser eliminada");
 
             return Ok(pet);
         }

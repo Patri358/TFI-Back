@@ -9,11 +9,11 @@ namespace Application.Interfaces
 {
     public interface IPetService
     {
-        List<PetDTO> GetAll();
-        PetDTO? GetById(int id);
-        PetDTO? GetByClientId(int clientId);
-        PetDTO? Add(CreatePetDTO pet);
-        PetDTO? Update(PetDTO pet);
-        PetDTO? Delete(int id);
+        Task<List<PetDTO>> GetAllAsync();
+        Task<PetDTO?> GetByIdAsync(int id);
+        Task<List<PetDTO>> GetByClientIdAsync(int clientId);
+        Task<PetDTO?> AddAsync(CreatePetDTO pet);
+        Task<PetDTO?> UpdateAsync(PetDTO pet);
+        Task<PetDTO?> DeleteAsync(int id);
     }
 }

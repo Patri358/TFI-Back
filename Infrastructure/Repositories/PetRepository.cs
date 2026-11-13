@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -16,45 +17,55 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Pet> GetAll()
+        public async Task<List<Pet>> GetAllAsync()
         {
-            return _context.Pets.ToList();
+            var pets = await _context.Pets.ToListAsync();
+            return pets;
         }
 
         //id de la mascota
-        public Pet? GetById(int id)
+        public async Task <Pet?> GetByIdAsync(int id)
         {
-            var pet = _context.Pets.FirstOrDefault(p => p.Id == id);
+            var pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == id);
             return pet;
         }
 
         // id del dueño
-        public Pet? GetByClientId(int clientId)
+        public async Task<List<Pet>> GetByClientIdAsync(int clientId)
         {
-            var pet = _context.Pets.FirstOrDefault(p => p.ClientId == clientId);
+            var pet = await _context.Pets
+                .Where(p => p.ClientId == clientId)
+                .ToListAsync();
             return pet;
         }
 
-        public Pet Add(Pet pet)
+        public async Task<Pet?> AddAsync(Pet pet)
         {
             _context.Pets.Add(pet);
             return pet;
         }
 
-        public Pet Update(Pet pet)
+        public async Task<Pet?> UpdateAsync(Pet pet)
         {
+            if (pet == null)
+                return null;
+
             _context.Pets.Update(pet);
             return pet;
         }
 
-        public Pet? Delete(int id)
+        public async Task<Pet?> DeleteAsync(int id)
         {
-            var pet = GetById(id);
-
+            var pet = await GetByIdAsync(id);
             if (pet == null) return null;
-            
+
             _context.Pets.Remove(pet);
             return pet;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

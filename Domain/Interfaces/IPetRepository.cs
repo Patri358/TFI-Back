@@ -8,7 +8,6 @@ namespace Application.Interfaces
 {
     public interface IPetRepository : IRepository<Pet>
     {
-        //Task<IEnumerable<Pet>> GetByClientIdAsync(int clientId);
-        Pet? GetByClientId(int clientId);
+        Task<List<Pet>> GetByClientIdAsync(int clientId);
     }
 }
