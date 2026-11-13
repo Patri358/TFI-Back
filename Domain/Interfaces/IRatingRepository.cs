@@ -8,7 +8,7 @@ namespace Application.Interfaces
 {
     public interface IRatingRepository : IRepository<Rating>
     {
-        //Task<IEnumerable<Rating>> GetByClientIdAsync(int clientId);
-        //Task<IEnumerable<Rating>> GetByShiftIdAsync(int shiftId);
+        Task<List<Rating>> GetByClientIdAsync(int clientId);
+        Task<List<Rating>> GetByShiftIdAsync(int shiftId);
     }
 }

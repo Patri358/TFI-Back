@@ -4,6 +4,8 @@ using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Microsoft.EntityFrameworkCore; 
 
 namespace Infrastructure.Repositories
 {
@@ -15,38 +17,66 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Rating> GetAll()
+        public async Task<List<Rating>> GetAllAsync()
         {
-            return _context.Ratings.ToList();
+            var ratings = await _context.Ratings.ToListAsync();
+            return ratings;
         }
 
-        public Rating? GetById(int id)
+        public async Task<Rating?> GetByIdAsync(int id)
         {
-            var rating = _context.Ratings.FirstOrDefault(r => r.Id == id);
-            if (rating == null) return null;
+            var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == id);
+            if (rating == null) 
+                return null;
 
             return rating;
         }
 
-        public Rating Add(Rating rating)
+        public async Task<List<Rating>> GetByClientIdAsync(int clientId)
+        {
+            var ratings = await _context.Ratings
+                .Where(r => r.ClientId == clientId)
+                .ToListAsync();
+
+            return ratings;
+        }
+        public async Task<List<Rating>> GetByShiftIdAsync(int shiftId)
+        {
+            var ratings = await _context.Ratings
+                .Where(r => r.ShiftId == shiftId)
+                .ToListAsync();
+
+            return ratings;
+        }
+
+        public async Task<Rating?> AddAsync(Rating rating)
         {
             _context.Ratings.Add(rating);
             return rating;
         }
 
-        public Rating Update(Rating rating)
+        public async Task<Rating?> UpdateAsync(Rating rating)
         {
+            if (rating == null)
+                return null;
+
             _context.Ratings.Update(rating);
             return rating;
         }
 
-        public Rating? Delete(int id)
+        public async Task<Rating?> DeleteAsync(int id)
         {
-            var rating = GetById(id);
-            if (rating == null) return null;
+            var rating = await GetByIdAsync(id);
+            if (rating == null) 
+                return null;
 
             _context.Ratings.Remove(rating);
             return rating;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }
