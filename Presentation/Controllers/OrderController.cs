@@ -15,51 +15,57 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<OrderDTO>> GetAll()
+        public async Task<ActionResult<List<OrderDTO>>> GetAllAsync()
         {
-            var orders = _orderService.GetAll();
+            var orders = await _orderService.GetAllAsync();
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<OrderDTO> GetById([FromRoute] int id)
+        public async Task<ActionResult<OrderDTO>> GetByIdAsync([FromRoute] int id)
         {
-            var order = _orderService.GetById(id);
-            if (order == null) return NotFound($"La orden con el Id:{id} no pudo ser encontrada");
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null) 
+                return NotFound($"La orden con el Id:{id} no pudo ser encontrada");
 
             return Ok(order);
         }
 
         [HttpPost]
-        public ActionResult<OrderDTO> Add(CreateOrderDTO order)
+        public async Task<ActionResult<OrderDTO>> Add(CreateOrderDTO order)
         {
-            var createdOrder = _orderService.Add(order);
-            if (createdOrder == null) return BadRequest($"La orden no pudo ser creada");
+            var createdOrder = await _orderService.AddAsync(order);
+            if (createdOrder == null) 
+                return BadRequest($"La orden no pudo ser creada");
 
             return CreatedAtAction(
-                actionName: nameof(GetById),
+                actionName: nameof(GetByIdAsync),
                 routeValues: new { id = createdOrder.Id },
                 value: createdOrder
             );
         }
 
         [HttpPut("{id}")]
-        public ActionResult<OrderDTO> Update([FromBody] OrderDTO order, [FromRoute] int id)
+        public async Task<ActionResult<OrderDTO>> Update([FromBody] OrderDTO order, [FromRoute] int id)
         {
-            if (order == null) return BadRequest("Los datos de la orden están incompletos");
-            if (order.Id != id) return BadRequest("El Id de la ruta no coincide con el de la orden");
+            if (order == null) 
+                return BadRequest("Los datos de la orden están incompletos");
+            if (order.Id != id) 
+                return BadRequest("El Id de la ruta no coincide con el de la orden");
 
-            var updateOrder = _orderService.Update(order);
-            if (updateOrder == null) return NotFound($"No se encontró la orden con el Id: {order.Id}");
+            var updateOrder = await _orderService.UpdateAsync(order);
+            if (updateOrder == null) 
+                return NotFound($"No se encontró la orden con el Id: {order.Id}");
 
             return Ok(updateOrder);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<OrderDTO> Delete([FromRoute] int id)
+        public async Task<ActionResult<OrderDTO>> Delete([FromRoute] int id)
         {
-            var order = _orderService.Delete(id);
-            if (order == null) return NotFound($"La orden con el Id:{id} no pudo ser eliminada");
+            var order = await _orderService.DeleteAsync(id);
+            if (order == null) 
+                return NotFound($"La orden con el Id:{id} no pudo ser eliminada");
 
             return Ok(order);
         }
