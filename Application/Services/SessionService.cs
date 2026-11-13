@@ -15,9 +15,9 @@ namespace Application.Services
             _sessionRepository = sessionRepository;
         }
 
-        public List<SessionDTO> GetAll()
+        public async Task<List<SessionDTO>> GetAllAsync()
         {
-            var sessions = _sessionRepository.GetAll();
+            var sessions = await _sessionRepository.GetAllAsync();
 
             return sessions.Select(s => new SessionDTO
             {
@@ -30,10 +30,9 @@ namespace Application.Services
             }).ToList();
         }
 
-        public SessionDTO? GetById(int id)
+        public async Task<SessionDTO?> GetByIdAsync(int id)
         {
-            var session = _sessionRepository.GetById(id);
-
+            var session = await _sessionRepository.GetByIdAsync(id);
             if (session == null) return null;
 
             return new SessionDTO
@@ -47,18 +46,55 @@ namespace Application.Services
             };
         }
 
-        public SessionDTO Add(CreateSessionDTO session)
+        public async Task<SessionDTO?> GetByTokenAsync(string token)
         {
+            var session = await _sessionRepository.GetByTokenAsync(token);
+            if (session == null) 
+                return null;
+
+            return new SessionDTO
+            {
+                Id = session.Id,
+                UserId = session.UserId,
+                Token = session.Token,
+                EmissionDate = session.EmissionDate,
+                RevocationDate = session.RevocationDate,
+                ExpirationDate = session.ExpirationDate
+            };
+        }
+
+        public async Task<List<SessionDTO>> GetActiveSessionsByUserIdAsync(int userId)
+        {
+            var sessions = await _sessionRepository.GetActiveSessionsByUserIdAsync(userId);
+            return sessions.Select(s => new SessionDTO
+            {
+                Id = s.Id,
+                UserId = s.UserId,
+                Token = s.Token,
+                EmissionDate = s.EmissionDate,
+                RevocationDate = s.RevocationDate,
+                ExpirationDate = s.ExpirationDate
+            }).ToList();
+        }
+
+        public async Task<SessionDTO?> AddAsync(CreateSessionDTO session)
+        {
+            if (session == null)
+                return null;
+
             var newSession = new Session
             {
                 UserId = session.UserId,
                 Token = session.Token,
                 EmissionDate = DateTime.Now,
-                RevocationDate = session.RevocationDate,
+                RevocationDate = null,
                 ExpirationDate = session.ExpirationDate
             };
 
-            var addedSession = _sessionRepository.Add(newSession);
+            var addedSession = await _sessionRepository.AddAsync(newSession);
+            await _sessionRepository.SaveChangesAsync();
+            if (addedSession == null) 
+                return null;
 
             var newSessionDTO = new SessionDTO
             {
@@ -72,20 +108,19 @@ namespace Application.Services
             return newSessionDTO;
         }
 
-        public SessionDTO? Update(SessionDTO session)
+        public async Task<SessionDTO?> UpdateAsync(SessionDTO session)
         {
-            var updateSession = _sessionRepository.GetById(session.Id);
-
+            var updateSession = await _sessionRepository.GetByIdAsync(session.Id);
             if (updateSession == null) return null;
 
-            updateSession.Id = session.Id;
             updateSession.UserId = session.UserId;
             updateSession.Token = session.Token;
             updateSession.EmissionDate = session.EmissionDate;
             updateSession.RevocationDate = session.RevocationDate;
             updateSession.ExpirationDate = session.ExpirationDate;
 
-            _sessionRepository.Update(updateSession);
+            await _sessionRepository.UpdateAsync(updateSession);
+            await _sessionRepository.SaveChangesAsync();
 
             return new SessionDTO
             {
@@ -98,13 +133,13 @@ namespace Application.Services
             };
         }
 
-        public SessionDTO? Delete(int id)
+        public async Task<SessionDTO?> DeleteAsync(int id)
         {
-            var session = _sessionRepository.GetById(id);
-
+            var session = await _sessionRepository.GetByIdAsync(id);
             if(session == null) return null;
 
-            _sessionRepository.Delete(id);
+            await _sessionRepository.DeleteAsync(id);
+            await _sessionRepository.SaveChangesAsync();
 
             return new SessionDTO
             {

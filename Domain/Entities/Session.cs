@@ -14,5 +14,3 @@ namespace Domain.Entities
         public DateTime ExpirationDate { get; set; }
     }
 }
-
-// verificar si se guarda la sesión inactiva

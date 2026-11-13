@@ -8,7 +8,6 @@ namespace Application.Models.Session
     {
         public int UserId { get; set; }
         public string Token { get; set; } = string.Empty;
-        public DateTime RevocationDate { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }
