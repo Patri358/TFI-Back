@@ -39,8 +39,8 @@ builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
-builder.Services.AddScoped<IUserservice, Userservice>();
-//builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // 4) Configuración JWT
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -110,6 +110,14 @@ builder.Services.AddControllers();
 //        }
 //    });
 //});
+
+// HttpClientFactory
+builder.Services.AddHttpClient(
+    "doghttpClient",
+    client =>
+    {
+        client.BaseAddress = new Uri("https://dog.ceo/api/breeds/image/random");
+    });
 
 var app = builder.Build();
 
